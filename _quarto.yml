@@ -1,0 +1,35 @@
+project:
+  type: website
+
+website:
+  title: "Colombian Fintech Customer Analytics"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: proposal.qmd
+        text: Proposal
+      - href: storyboard.qmd
+        text: Storyboard
+      - href: module_overview.qmd
+        text: Overview Module
+      - href: module_engagement.qmd
+        text: Engagement Module
+      - href: module_retention.qmd
+        text: Retention Module
+      - href: meeting_minutes.qmd
+        text: Minutes
+      - href: poster.qmd
+        text: Poster
+      - href: user_guide.qmd
+        text: User Guide
+      - href: shiny.qmd
+        text: Shiny App
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+editor: visual

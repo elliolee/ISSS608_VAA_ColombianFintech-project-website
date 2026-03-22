@@ -1,0 +1,7 @@
+---
+title: "Proposal"
+---
+
+# Project Proposal
+
+This page will contain the project proposal, problem statement, motivation, and analytical objectives.

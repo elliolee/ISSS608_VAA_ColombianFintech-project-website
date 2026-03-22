@@ -1,0 +1,15 @@
+---
+title: "Home"
+---
+
+# Colombian Fintech Customer Analytics
+
+This project develops a web-enabled visual analytics application using Shiny to explore customer structure, engagement, and retention patterns in a Colombian fintech dataset.
+
+## Project Structure
+
+The project is organised into three modules:
+
+1. Customer Overview & Segmentation
+2. Customer Engagement & Experience
+3. Retention Risk & Customer Value

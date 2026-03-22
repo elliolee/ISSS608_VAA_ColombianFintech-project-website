@@ -1,0 +1,7 @@
+---
+title: "User Guide"
+---
+
+# User Guide
+
+This page will explain how to use the Shiny application.
