@@ -25,14 +25,49 @@
     "href": "index.html",
     "title": "Home",
     "section": "",
-    "text": "This project develops a web-enabled visual analytics application using Shiny to explore customer structure, engagement, and retention patterns in a Colombian fintech dataset.\n\n\nThe project is organised into three modules:\n\nCustomer Overview & Segmentation\nCustomer Engagement & Experience\nRetention Risk & Customer Value"
+    "text": "An interactive visual analytics platform for exploring customer structure, digital engagement, and retention patterns in a Colombian fintech dataset.\nExplore Project Launch Shiny App"
   },
   {
-    "objectID": "index.html#project-structure",
-    "href": "index.html#project-structure",
+    "objectID": "index.html#project-background",
+    "href": "index.html#project-background",
     "title": "Home",
-    "section": "",
-    "text": "The project is organised into three modules:\n\nCustomer Overview & Segmentation\nCustomer Engagement & Experience\nRetention Risk & Customer Value"
+    "section": "Project Background",
+    "text": "Project Background\nThe rapid growth of digital financial services has made customer analytics increasingly important for fintech platforms. Understanding who customers are, how they engage with products and services, and which groups are at greater risk of churn can support more effective product design, customer retention, and business decision-making.\nThis project focuses on a Colombian fintech customer dataset and develops a web-enabled visual analytics application to support interactive analysis of customer behaviour and value."
+  },
+  {
+    "objectID": "index.html#why-this-project-matters",
+    "href": "index.html#why-this-project-matters",
+    "title": "Home",
+    "section": "Why This Project Matters",
+    "text": "Why This Project Matters\nThis project combines three important perspectives:\n\nColombian context: customer data from an emerging Latin American digital finance environment\n\nFintech context: platform usage, product adoption, service interaction, and customer risk\n\nCustomer analytics context: segmentation, engagement, and retention/value analysis\n\nTogether, these perspectives allow us to build a system that is not only descriptive, but also analytically useful for understanding customer dynamics."
+  },
+  {
+    "objectID": "index.html#project-storyline",
+    "href": "index.html#project-storyline",
+    "title": "Home",
+    "section": "Project Storyline",
+    "text": "Project Storyline\nThe application is organised into three analytical modules:\n\n\n1. Customer Overview & Segmentation\nUnderstand the structure of the customer base through demographic, acquisition, and product adoption patterns.\n\n\n2. Customer Engagement & Experience\nExplore customer interaction with the platform through usage behaviour, support experience, satisfaction, and feedback.\n\n\n3. Retention Risk & Customer Value\nIdentify high-value and high-risk customer groups through churn probability, transaction behaviour, and lifetime value metrics."
+  },
+  {
+    "objectID": "index.html#analytical-flow",
+    "href": "index.html#analytical-flow",
+    "title": "Home",
+    "section": "Analytical Flow",
+    "text": "Analytical Flow\nThe visual analytics workflow follows a progressive structure:\nCustomer Structure → Engagement & Experience → Retention & Value\nThis progression supports a more coherent user journey and turns the project into an integrated analytical system rather than a collection of isolated charts."
+  },
+  {
+    "objectID": "index.html#project-components",
+    "href": "index.html#project-components",
+    "title": "Home",
+    "section": "Project Components",
+    "text": "Project Components\nThis project consists of two connected parts:\n\nProject Website: proposal, storyboard, module write-ups, poster, meeting minutes, and user guide\n\nShiny Application: interactive visual analytics dashboard for customer exploration and analysis"
+  },
+  {
+    "objectID": "index.html#next-steps",
+    "href": "index.html#next-steps",
+    "title": "Home",
+    "section": "Next Steps",
+    "text": "Next Steps\nAs the project develops, this website will be updated with:\n\nthe final proposal and storyboard\n\nmodule findings and interface designs\n\nuser guide and poster\n\na link to the deployed Shiny app"
   },
   {
     "objectID": "module_engagement.html",

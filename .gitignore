@@ -6,10 +6,4 @@
 /.quarto/
 **/*.quarto_ipynb
 
-
-_site/
-.Rhistory
-.RData
-.Rproj.user/
-
 .DS_Store

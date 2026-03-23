@@ -7,18 +7,22 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: proposal.qmd
-        text: Proposal
-      - href: storyboard.qmd
-        text: Storyboard
-      - href: module_overview.qmd
-        text: Overview Module
-      - href: module_engagement.qmd
-        text: Engagement Module
-      - href: module_retention.qmd
-        text: Retention Module
-      - href: meeting_minutes.qmd
-        text: Minutes
+      - text: Project
+        menu:
+          - href: proposal.qmd
+            text: Proposal
+          - href: storyboard.qmd
+            text: Storyboard
+          - href: meeting_minutes.qmd
+            text: Meeting Minutes
+      - text: Modules
+        menu:
+          - href: module_overview.qmd
+            text: Customer Overview & Segmentation
+          - href: module_engagement.qmd
+            text: Customer Engagement & Experience
+          - href: module_retention.qmd
+            text: Retention Risk & Customer Value
       - href: poster.qmd
         text: Poster
       - href: user_guide.qmd
@@ -31,5 +35,6 @@ format:
     theme: cosmo
     css: styles.css
     toc: true
+    page-layout: full
 
 editor: visual

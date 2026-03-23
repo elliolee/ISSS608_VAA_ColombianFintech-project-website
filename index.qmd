@@ -1,15 +1,76 @@
 ---
 title: "Home"
+format:
+  html:
+    toc: false
 ---
 
+:::{.hero-section}
 # Colombian Fintech Customer Analytics
 
-This project develops a web-enabled visual analytics application using Shiny to explore customer structure, engagement, and retention patterns in a Colombian fintech dataset.
+An interactive visual analytics platform for exploring customer structure, digital engagement, and retention patterns in a Colombian fintech dataset.
 
-## Project Structure
+[Explore Project](proposal.qmd){.btn-primary}
+[Launch Shiny App](shiny.qmd){.btn-secondary}
+:::
 
-The project is organised into three modules:
+## Project Background
 
-1. Customer Overview & Segmentation
-2. Customer Engagement & Experience
-3. Retention Risk & Customer Value
+The rapid growth of digital financial services has made customer analytics increasingly important for fintech platforms. Understanding who customers are, how they engage with products and services, and which groups are at greater risk of churn can support more effective product design, customer retention, and business decision-making.
+
+This project focuses on a Colombian fintech customer dataset and develops a web-enabled visual analytics application to support interactive analysis of customer behaviour and value.
+
+## Why This Project Matters
+
+This project combines three important perspectives:
+
+- **Colombian context**: customer data from an emerging Latin American digital finance environment  
+- **Fintech context**: platform usage, product adoption, service interaction, and customer risk  
+- **Customer analytics context**: segmentation, engagement, and retention/value analysis  
+
+Together, these perspectives allow us to build a system that is not only descriptive, but also analytically useful for understanding customer dynamics.
+
+## Project Storyline
+
+The application is organised into three analytical modules:
+
+::: {.grid}
+::: {.g-col-4 .card-block}
+### 1. Customer Overview & Segmentation
+Understand the structure of the customer base through demographic, acquisition, and product adoption patterns.
+:::
+
+::: {.g-col-4 .card-block}
+### 2. Customer Engagement & Experience
+Explore customer interaction with the platform through usage behaviour, support experience, satisfaction, and feedback.
+:::
+
+::: {.g-col-4 .card-block}
+### 3. Retention Risk & Customer Value
+Identify high-value and high-risk customer groups through churn probability, transaction behaviour, and lifetime value metrics.
+:::
+:::
+
+## Analytical Flow
+
+The visual analytics workflow follows a progressive structure:
+
+**Customer Structure → Engagement & Experience → Retention & Value**
+
+This progression supports a more coherent user journey and turns the project into an integrated analytical system rather than a collection of isolated charts.
+
+## Project Components
+
+This project consists of two connected parts:
+
+- **Project Website**: proposal, storyboard, module write-ups, poster, meeting minutes, and user guide  
+- **Shiny Application**: interactive visual analytics dashboard for customer exploration and analysis  
+
+## Next Steps
+
+As the project develops, this website will be updated with:
+
+- the final proposal and storyboard  
+- module findings and interface designs  
+- user guide and poster  
+- a link to the deployed Shiny app
