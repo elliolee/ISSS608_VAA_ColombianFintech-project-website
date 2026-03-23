@@ -1,0 +1,79 @@
+[
+  {
+    "objectID": "module_overview.html",
+    "href": "module_overview.html",
+    "title": "Customer Overview & Segmentation",
+    "section": "",
+    "text": "Customer Overview & Segmentation\nThis page will contain the prototype, analysis, and findings for Module 1."
+  },
+  {
+    "objectID": "storyboard.html",
+    "href": "storyboard.html",
+    "title": "Storyboard",
+    "section": "",
+    "text": "Storyboard\nOverall storyline:\nCustomer Structure → Engagement & Experience → Retention & Value\nThis page will describe the intended user journey and UI design logic."
+  },
+  {
+    "objectID": "meeting_minutes.html",
+    "href": "meeting_minutes.html",
+    "title": "Meeting Minutes",
+    "section": "",
+    "text": "Meeting Minutes\nThis page will document project meetings, decisions, and action items."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Home",
+    "section": "",
+    "text": "This project develops a web-enabled visual analytics application using Shiny to explore customer structure, engagement, and retention patterns in a Colombian fintech dataset.\n\n\nThe project is organised into three modules:\n\nCustomer Overview & Segmentation\nCustomer Engagement & Experience\nRetention Risk & Customer Value"
+  },
+  {
+    "objectID": "index.html#project-structure",
+    "href": "index.html#project-structure",
+    "title": "Home",
+    "section": "",
+    "text": "The project is organised into three modules:\n\nCustomer Overview & Segmentation\nCustomer Engagement & Experience\nRetention Risk & Customer Value"
+  },
+  {
+    "objectID": "module_engagement.html",
+    "href": "module_engagement.html",
+    "title": "Customer Engagement & Experience",
+    "section": "",
+    "text": "Customer Engagement & Experience\nThis page will contain the prototype, analysis, and findings for Module 2."
+  },
+  {
+    "objectID": "poster.html",
+    "href": "poster.html",
+    "title": "Poster",
+    "section": "",
+    "text": "Project Poster\nThis page will present the final poster and supporting materials."
+  },
+  {
+    "objectID": "shiny.html",
+    "href": "shiny.html",
+    "title": "Shiny App",
+    "section": "",
+    "text": "Shiny Application\nThe interactive Shiny application will be deployed separately on shinyapps.io.\nA launch link will be added here once deployment is ready."
+  },
+  {
+    "objectID": "module_retention.html",
+    "href": "module_retention.html",
+    "title": "Retention Risk & Customer Value",
+    "section": "",
+    "text": "Retention Risk & Customer Value\nThis page will contain the prototype, analysis, and findings for Module 3."
+  },
+  {
+    "objectID": "user_guide.html",
+    "href": "user_guide.html",
+    "title": "User Guide",
+    "section": "",
+    "text": "User Guide\nThis page will explain how to use the Shiny application."
+  },
+  {
+    "objectID": "proposal.html",
+    "href": "proposal.html",
+    "title": "Proposal",
+    "section": "",
+    "text": "Project Proposal\nThis page will contain the project proposal, problem statement, motivation, and analytical objectives."
+  }
+]
