@@ -27,7 +27,7 @@ website:
         text: Poster
       - href: user_guide.qmd
         text: User Guide
-      - href: shiny.qmd
+      - href: https://ligen.shinyapps.io/isss608_vaa_colombianfintech-project-shiny/
         text: Shiny App
 
 format:
@@ -37,4 +37,4 @@ format:
     toc: true
     page-layout: full
 
-editor: visual
+editor: Group 7
