@@ -88,7 +88,7 @@
     "href": "shiny.html",
     "title": "Shiny App",
     "section": "",
-    "text": "Shiny Application\nThe interactive Shiny application will be deployed separately on shinyapps.io.\nA launch link will be added here once deployment is ready."
+    "text": "Shiny Application\nThe interactive visual analytics dashboard is deployed on shinyapps.io.\nLaunch Shiny App"
   },
   {
     "objectID": "module_retention.html",

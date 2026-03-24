@@ -4,6 +4,6 @@ title: "Shiny App"
 
 # Shiny Application
 
-The interactive Shiny application will be deployed separately on shinyapps.io.
+The interactive visual analytics dashboard is deployed on shinyapps.io.
 
-A launch link will be added here once deployment is ready.
+[Launch Shiny App](https://ligen.shinyapps.io/isss608_vaa_colombianfintech-project-shiny/){.btn-primary}
