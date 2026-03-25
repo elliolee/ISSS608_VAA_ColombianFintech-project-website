@@ -95,7 +95,7 @@
     "href": "module_retention.html",
     "title": "Retention Risk & Customer Value",
     "section": "",
-    "text": "Retention Risk & Customer Value\nThis page will contain the prototype, analysis, and findings for Module 3."
+    "text": "This page will contain the prototype, analysis, and findings for Module 3."
   },
   {
     "objectID": "user_guide.html",
@@ -110,5 +110,201 @@
     "title": "Proposal",
     "section": "",
     "text": "Project Proposal\nThis page will contain the project proposal, problem statement, motivation, and analytical objectives."
+  },
+  {
+    "objectID": "module_retention.html#project-background",
+    "href": "module_retention.html#project-background",
+    "title": "Retention Risk & Customer Value",
+    "section": "1.1. Project Background",
+    "text": "1.1. Project Background\nFintech companies operate in highly competitive digital markets where customer engagement and retention are critical for long-term sustainability. Unlike traditional banks, fintech platforms rely heavily on digital interactions between users and financial services. Understanding how customers interact with these platforms is essential for identifying profitable customer segments and maintaining long-term customer relationships."
+  },
+  {
+    "objectID": "module_retention.html#why-customer-retention-matters",
+    "href": "module_retention.html#why-customer-retention-matters",
+    "title": "Retention Risk & Customer Value",
+    "section": "1.2. Why Customer Retention Matters?",
+    "text": "1.2. Why Customer Retention Matters?\nAny business requires significant marketing and operational costs when it wants to attract new customers. Retaining existing customers proves to be more cost-effective and provide more value for extended periods.\nCustomers who remain active on a fintech platform tend to perform more financial transactions, adopt multiple financial products, and contribute higher customer lifetime value (CLV). In contrast, customers who show declining engagement or dissatisfaction may be more likely to discontinue their use of the platform.\nIdentifying customers with high churn risk allows fintech companies to implement specific strategies for retaining those customers. Organizations also need to track which customers produce the most value because this information allows them to distribute resources toward their most profitable customer groups."
+  },
+  {
+    "objectID": "module_retention.html#our-proposal",
+    "href": "module_retention.html#our-proposal",
+    "title": "Retention Risk & Customer Value",
+    "section": "1.3. Our Proposal",
+    "text": "1.3. Our Proposal\nThe project objective is to develop a visual analytics application using R and Shiny for the interactive exploration of fintech customer data.\nThis tools would allow users to dynamically filter data, explore patterns across multiple dimensions, and find relationships between behavioral indicators and financial outcomes.\nIt is intended to help analysts compare churn risk across customer groups, examine engagement and profitability, and identify customers at risk of leaving the platform."
+  },
+  {
+    "objectID": "module_retention.html#project-storyline",
+    "href": "module_retention.html#project-storyline",
+    "title": "Retention Risk & Customer Value",
+    "section": "2.1. Project Storyline",
+    "text": "2.1. Project Storyline\nThe project will deliver an interactive Shiny dashboard consisting of three analytical modules\n\nModule 1 - Customer Overview and Exploratory Analysis\nModule 2 - Customer Overview & Segmentation\nModule 3 – Exploratory Modelling: Retention Risk & Customer Value"
+  },
+  {
+    "objectID": "module_retention.html#role-of-the-module-in-the-larger-system",
+    "href": "module_retention.html#role-of-the-module-in-the-larger-system",
+    "title": "Retention Risk & Customer Value",
+    "section": "2.2. Role of the Module in the Larger System",
+    "text": "2.2. Role of the Module in the Larger System\nThis report focuses on Module 3 - Exploratory Modelling: Retention Risk & Customer Value.\nWhile the first two modules provide insights into the whole customer base and how they engagement with fintech services, this module focuses specifically on the customer profitability and retention risk.\nBy integrating the previously analyzed behavioral indicators, satisfaction metrics, and financial metrics, this exploratory modelling approach allows us to identify the behavioral patterns associated with high-value customers while also detecting early warning signals of potential churn.\nThese insights could support decision-making for marketing strategies and if executed correctly, improve long-term profitability."
+  },
+  {
+    "objectID": "module_retention.html#raw-dataset",
+    "href": "module_retention.html#raw-dataset",
+    "title": "Retention Risk & Customer Value",
+    "section": "3.1. Raw Dataset",
+    "text": "3.1. Raw Dataset\nThe analysis uses the COFINFAD (Colombian Fintech Financial Analytics) dataset, which contains detailed information about fintech customers. The dataset includes demographic information, financial product usage, transaction activity, customer satisfaction indicators, and predicted churn probabilities.\nThe dataset contains approximately 48,000 customer records and more than 50 variables, providing a comprehensive view of customer behavior within a fintech platform.\n\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.2.0     ✔ readr     2.2.0\n✔ forcats   1.0.1     ✔ stringr   1.6.0\n✔ ggplot2   4.0.2     ✔ tibble    3.3.1\n✔ lubridate 1.9.4     ✔ tidyr     1.3.2\n✔ purrr     1.2.1     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(readxl)\nfintech &lt;- read_xlsx(\"customer_data.xlsx\")"
+  },
+  {
+    "objectID": "module_retention.html#variable-grouping",
+    "href": "module_retention.html#variable-grouping",
+    "title": "Retention Risk & Customer Value",
+    "section": "3.2. Variable Grouping",
+    "text": "3.2. Variable Grouping\nAlthough the dataset contains a wide range of variables, this module primarily focuses on variables related to:\n\nCustomer Value Indicators\nThese variables measure the long-term financial contribution of each customer.\n\n\n\ncustomer_lifetime_value\n\n\nclv_segment\n\n\ncustomer_segment\n\n\n\n\n\nRetention Risk Indicators\nThe indicators capture signals related to potential customer churn.\n\n\n\nchurn_probability\n\n\nsatisfaction_score\n\n\nnps_score\n\n\n\n\n\nTransaction & Engagement Behavior Indicators\nThese metrics indicate how actively a customer is and their engagement with the fintech platform.\n\n\n\nmonthly_transaction_count\n\n\naverage_transaction_value\n\n\ntotal_transaction_volume\n\n\ntransaction_frequency\n\n\nactive_products\n\n\n\n\n\nGeographic Variables\nThese fields allow spatial analysis of CLV and geographic patterns in fintech adoption.\n\n\n\ncity\n\n\ndepartment\n\n\nlatitude\n\n\nlongitude\n\n\n\n\n\nDemographic Variables\nThese information help us identify the customers background and how different groups behave within fintech services.\n\n\n\ngender\n\n\nincome_bracket\n\n\noccupation\n\n\nage"
+  },
+  {
+    "objectID": "module_retention.html#data-cleaning",
+    "href": "module_retention.html#data-cleaning",
+    "title": "Retention Risk & Customer Value",
+    "section": "3.3. Data Cleaning",
+    "text": "3.3. Data Cleaning\nData preparation involved various steps to ensure the dataset was suitable for analysis:\n\nVerify data types for numerical and categorical variables\n\nsapply(fintech, class)\n\n$customer_id\n[1] \"numeric\"\n\n$age\n[1] \"numeric\"\n\n$gender\n[1] \"character\"\n\n$city\n[1] \"character\"\n\n$department\n[1] \"character\"\n\n$latitude\n[1] \"numeric\"\n\n$longitude\n[1] \"numeric\"\n\n$income_bracket\n[1] \"character\"\n\n$occupation\n[1] \"character\"\n\n$education_level\n[1] \"character\"\n\n$marital_status\n[1] \"character\"\n\n$household_size\n[1] \"numeric\"\n\n$acquisition_channel\n[1] \"character\"\n\n$customer_segment\n[1] \"character\"\n\n$savings_account\n[1] \"logical\"\n\n$credit_card\n[1] \"logical\"\n\n$personal_loan\n[1] \"logical\"\n\n$investment_account\n[1] \"logical\"\n\n$insurance_product\n[1] \"logical\"\n\n$active_products\n[1] \"numeric\"\n\n$app_logins_frequency\n[1] \"numeric\"\n\n$feature_usage_diversity\n[1] \"numeric\"\n\n$bill_payment_user\n[1] \"logical\"\n\n$auto_savings_enabled\n[1] \"logical\"\n\n$credit_utilization_ratio\n[1] \"numeric\"\n\n$international_transactions\n[1] \"numeric\"\n\n$failed_transactions\n[1] \"numeric\"\n\n$tx_count\n[1] \"numeric\"\n\n$avg_tx_value\n[1] \"numeric\"\n\n$total_tx_volume\n[1] \"numeric\"\n\n$first_tx\n[1] \"POSIXct\" \"POSIXt\" \n\n$last_tx\n[1] \"POSIXct\" \"POSIXt\" \n\n$base_satisfaction\n[1] \"numeric\"\n\n$tx_satisfaction\n[1] \"numeric\"\n\n$product_satisfaction\n[1] \"numeric\"\n\n$satisfaction_score\n[1] \"numeric\"\n\n$nps_score\n[1] \"numeric\"\n\n$last_survey_date\n[1] \"POSIXct\" \"POSIXt\" \n\n$support_tickets_count\n[1] \"numeric\"\n\n$resolved_tickets_ratio\n[1] \"numeric\"\n\n$app_store_rating\n[1] \"numeric\"\n\n$feedback_sentiment\n[1] \"character\"\n\n$feature_requests\n[1] \"character\"\n\n$complaint_topics\n[1] \"character\"\n\n$clv_segment\n[1] \"character\"\n\n$monthly_transaction_count\n[1] \"numeric\"\n\n$average_transaction_value\n[1] \"numeric\"\n\n$total_transaction_volume\n[1] \"numeric\"\n\n$transaction_frequency\n[1] \"numeric\"\n\n$last_transaction_date\n[1] \"POSIXct\" \"POSIXt\" \n\n$preferred_transaction_type\n[1] \"character\"\n\n$first_transaction_date\n[1] \"POSIXct\" \"POSIXt\" \n\n$weekend_transaction_ratio\n[1] \"numeric\"\n\n$avg_daily_transactions\n[1] \"numeric\"\n\n$customer_tenure\n[1] \"numeric\"\n\n$churn_probability\n[1] \"numeric\"\n\n$customer_lifetime_value\n[1] \"numeric\"\n\n\nCheck for duplicated customers\n\nfintech %&gt;%\n  filter(duplicated(customer_id))\n\n# A tibble: 0 × 57\n# ℹ 57 variables: customer_id &lt;dbl&gt;, age &lt;dbl&gt;, gender &lt;chr&gt;, city &lt;chr&gt;,\n#   department &lt;chr&gt;, latitude &lt;dbl&gt;, longitude &lt;dbl&gt;, income_bracket &lt;chr&gt;,\n#   occupation &lt;chr&gt;, education_level &lt;chr&gt;, marital_status &lt;chr&gt;,\n#   household_size &lt;dbl&gt;, acquisition_channel &lt;chr&gt;, customer_segment &lt;chr&gt;,\n#   savings_account &lt;lgl&gt;, credit_card &lt;lgl&gt;, personal_loan &lt;lgl&gt;,\n#   investment_account &lt;lgl&gt;, insurance_product &lt;lgl&gt;, active_products &lt;dbl&gt;,\n#   app_logins_frequency &lt;dbl&gt;, feature_usage_diversity &lt;dbl&gt;, …\n\n\nIdentify any missing values in key analytical variables\n\nfintech %&gt;%\n  summarise(\n    missing_clv = sum(is.na(customer_lifetime_value)),\n    missing_churn = sum(is.na(churn_probability)),\n    missing_transactions = sum(is.na(transaction_frequency))\n  )\n\n# A tibble: 1 × 3\n  missing_clv missing_churn missing_transactions\n        &lt;int&gt;         &lt;int&gt;                &lt;int&gt;\n1           0             0                    0\n\n\nRemove incomplete observations where necessary\n\nfintech_clean &lt;- fintech %&gt;%\n  filter(\n    !is.na(customer_lifetime_value),\n    !is.na(churn_probability),\n    !is.na(transaction_frequency)\n  )\n\n\n\nnrow(fintech) - nrow(fintech_clean)\n\n[1] 0\n\n\n\nCustomer Lifetime Value (CLV) values were rescaled from absolute currency values to millions of Colombian Pesos in order to improve readability and interpretability in visualisations.\n\nfintech_clean &lt;- fintech_clean %&gt;%\n  mutate(clv_millions = customer_lifetime_value / 1000000)\n\nAge was grouped into age buckets to facilitate segment comparison and improve interpretability of demographic patterns. This will also help when creating filters for a dynamic dashboard.\n\nlibrary(dplyr)\n\nfintech_clean &lt;- fintech_clean %&gt;%\n  mutate(\n    age_bucket = cut(\n      age,\n      breaks = c(18, 25, 35, 45, 55, 65, Inf),\n      labels = c(\"18–25\", \"26–35\", \"36–45\", \"46–55\", \"56–65\", \"65+\"),\n      right = TRUE\n    )\n  )"
+  },
+  {
+    "objectID": "module_retention.html#evaluation-of-r-packages",
+    "href": "module_retention.html#evaluation-of-r-packages",
+    "title": "Retention Risk & Customer Value",
+    "section": "3.4. Evaluation of R Packages",
+    "text": "3.4. Evaluation of R Packages\nFor the development of the prototype module and the visual analytics components, several R packages are required to support data manipulation, visualization, and formatting of analytical outputs.\nThe main packages used in this project include:\n\n\n\n\n\n\n\nPackage\nUse\n\n\n\n\ntidyverse\nUsed to support the overall data science workflow, including data transformation, cleaning, and preparation of the fintech dataset.\n\n\nggplot2\nCreates the core visualizations in this module, including boxplots, bar charts, scatterplots, and geographic maps.\n\n\ndplyr\nManipulates and summarizes the dataset, groups customers by segment or location and calculates metrics like average churn probability and average CLV.\n\n\nscales\nImprove visualization readability by formatting large financial values, percentages, and axis labels.\n\n\nplotly\nAdds interactivity to selected visualizations, enabling users to hover over elements.\n\n\nrandomForest\nDevelop an exploratory machine learning model that predicts CLV by capturing nonlinear relationships and interactions between variables.\n\n\n\nAll these packages are hosted and maintained on CRAN, ensuring compatibility with the R environment and allowing them to be installed easily.\nTo verify that these packages are available in CRAN, the following command can be used in R:\n\npackages &lt;- c(\"tidyverse\",\"ggplot2\",\"dplyr\",\"scales\",\"plotly\",\"randomForest\")\n\nsapply(packages, requireNamespace, quietly = TRUE)\n\n   tidyverse      ggplot2        dplyr       scales       plotly randomForest \n        TRUE         TRUE         TRUE         TRUE         TRUE         TRUE \n\n\nTo verify that these packages are available in CRAN, the following command can be used in R:"
+  },
+  {
+    "objectID": "module_retention.html#clv-distribution-by-customer-segment",
+    "href": "module_retention.html#clv-distribution-by-customer-segment",
+    "title": "Retention Risk & Customer Value",
+    "section": "4.1. CLV Distribution by Customer Segment",
+    "text": "4.1. CLV Distribution by Customer Segment\nA boxplot is used to compare the distribution of customer lifetime value across customer segments. Because CLV values are highly skewed, a logarithmic scale is used to improve readability.\nFields used:\n\ncustomer_segment\ncustomer_lifetime_value\n\nThis visualization helps identify which segments generate the highest financial value."
+  },
+  {
+    "objectID": "module_retention.html#churn-probability-by-segment",
+    "href": "module_retention.html#churn-probability-by-segment",
+    "title": "Retention Risk & Customer Value",
+    "section": "4.2. Churn Probability by Segment",
+    "text": "4.2. Churn Probability by Segment\nA bar chart compares average churn probability across customer segments.\nFields used:\n\ncustomer_segment\nchurn_probability\n\nThis graph highlights which customer groups exhibit higher retention risk."
+  },
+  {
+    "objectID": "module_retention.html#engagement-behavior-vs-customer-value",
+    "href": "module_retention.html#engagement-behavior-vs-customer-value",
+    "title": "Retention Risk & Customer Value",
+    "section": "4.3. Engagement Behavior vs Customer Value",
+    "text": "4.3. Engagement Behavior vs Customer Value\nA scatter plot examines the relationship between transaction frequency and customer lifetime value.\nFields used:\n\ntransaction_frequency\ncustomer_lifetime_value\ncustomer_segment\n\nThis chart helps determine whether highly engaged customers generate higher financial value."
+  },
+  {
+    "objectID": "module_retention.html#geographic-distribution-of-customer-value",
+    "href": "module_retention.html#geographic-distribution-of-customer-value",
+    "title": "Retention Risk & Customer Value",
+    "section": "4.4. Geographic Distribution of Customer Value",
+    "text": "4.4. Geographic Distribution of Customer Value\nA geospatial map visualizes the distribution of average customer lifetime value across geographic locations.\nFields used:\n\nlatitude\nlongitude\ncustomer_lifetime_value\n\nThis map reveals geographic patterns in fintech customer value."
+  },
+  {
+    "objectID": "module_retention.html#predicted-vs-actual-customer-lifetime-value",
+    "href": "module_retention.html#predicted-vs-actual-customer-lifetime-value",
+    "title": "Retention Risk & Customer Value",
+    "section": "4.5. Predicted vs Actual Customer Lifetime Value",
+    "text": "4.5. Predicted vs Actual Customer Lifetime Value\nA scatter plot comparing predicted and actual CLV values is included.\nFields used:\n\ncustomer_lifetime_value\ntransaction_frequency\nactive_products\naverage_transaction_value\nsatisfaction_score\nnps_score\n\nThis illustrates the relationship between the CLV values predicted by the regression model and the observed CLV in the dataset."
+  },
+  {
+    "objectID": "module_retention.html#readability",
+    "href": "module_retention.html#readability",
+    "title": "Retention Risk & Customer Value",
+    "section": "Readability",
+    "text": "Readability\nVisualizations use clear axis labels, minimal visual clutter, and appropriate scaling to ensure readability."
+  },
+  {
+    "objectID": "module_retention.html#comparison-across-segments",
+    "href": "module_retention.html#comparison-across-segments",
+    "title": "Retention Risk & Customer Value",
+    "section": "Comparison Across Segments",
+    "text": "Comparison Across Segments\nCharts will allow comparison across customer segments and groups to highlight meaningful differences in engagement and value."
+  },
+  {
+    "objectID": "module_retention.html#progressive-drill-down",
+    "href": "module_retention.html#progressive-drill-down",
+    "title": "Retention Risk & Customer Value",
+    "section": "Progressive Drill-Down",
+    "text": "Progressive Drill-Down\nIn the proposed dashboard, users will be able to interactively filter the dataset to explore specific segments and behavioral patterns in greater detail."
+  },
+  {
+    "objectID": "module_retention.html#coordinated-views",
+    "href": "module_retention.html#coordinated-views",
+    "title": "Retention Risk & Customer Value",
+    "section": "Coordinated Views",
+    "text": "Coordinated Views\nMultiple visualizations are designed to work together, enabling users to analyse relationships between engagement, customer value, and retention risk."
+  },
+  {
+    "objectID": "module_retention.html#color-and-label-choices",
+    "href": "module_retention.html#color-and-label-choices",
+    "title": "Retention Risk & Customer Value",
+    "section": "Color and Label Choices",
+    "text": "Color and Label Choices\nConsistent color schemes will be used across visualizations to represent customer segments and ensure consistency."
+  },
+  {
+    "objectID": "module_retention.html#sketch",
+    "href": "module_retention.html#sketch",
+    "title": "Retention Risk & Customer Value",
+    "section": "6.1. Sketch",
+    "text": "6.1. Sketch"
+  },
+  {
+    "objectID": "module_retention.html#sidebar-panel",
+    "href": "module_retention.html#sidebar-panel",
+    "title": "Retention Risk & Customer Value",
+    "section": "6.2. Sidebar Panel",
+    "text": "6.2. Sidebar Panel\nIt will contain filtering controls to select the subset of customers we wish to analyze.\nThese controls will include demographic variables such as:\n\nGender\nIncome bracket\nOccupation\nAge group"
+  },
+  {
+    "objectID": "module_retention.html#main-panel",
+    "href": "module_retention.html#main-panel",
+    "title": "Retention Risk & Customer Value",
+    "section": "6.3. Main panel",
+    "text": "6.3. Main panel\nIt will display the visual analytics outputs of the module. These outputs include the key visualizations developed in this prototype (more details in section 4)"
+  },
+  {
+    "objectID": "module_retention.html#input-output-mapping",
+    "href": "module_retention.html#input-output-mapping",
+    "title": "Retention Risk & Customer Value",
+    "section": "6.4. Input-output mapping ",
+    "text": "6.4. Input-output mapping \nThe demographic filters in the sidebar will serve as inputs, which dynamically filter the dataset used by each visualisation. The filtered dataset will then be passed to the output components, which generate the charts and visualizations displayed in the main panel."
+  },
+  {
+    "objectID": "module_retention.html#clv-distribution-by-customer-segment-1",
+    "href": "module_retention.html#clv-distribution-by-customer-segment-1",
+    "title": "Retention Risk & Customer Value",
+    "section": "7.1. CLV Distribution by Customer Segment",
+    "text": "7.1. CLV Distribution by Customer Segment\n\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(scales)\n\n\nAttaching package: 'scales'\n\n\nThe following object is masked from 'package:purrr':\n\n    discard\n\n\nThe following object is masked from 'package:readr':\n\n    col_factor\n\nggplot(fintech_clean, \n       aes(x = customer_segment, \n           y = clv_millions,\n           fill = customer_segment)) +\n  \n  geom_boxplot(\n    alpha = 0.8,\n    outlier.alpha = 0.3,\n    width = 0.6\n  ) +\n  \n  # Add mean points\n  stat_summary(\n    fun = mean,\n    geom = \"point\",\n    shape = 18,\n    size = 3,\n    color = \"darkblue\"\n  ) +\n  \n  scale_fill_brewer(\n    palette = \"Blues\",\n    guide = \"none\"\n  ) +\n  \n  scale_y_log10(\n    labels = comma\n  ) +\n  \n  labs(\n    title = \"Customer Lifetime Value by Segment\",\n    subtitle = \"Distribution shown on logarithmic scale\",\n    x = \"Customer Segment\",\n    y = \"Customer Lifetime Value (Millions, Log Scale)\"\n  ) +\n  \n  theme_minimal(base_size = 13) +\n  \n  theme(\n    plot.title = element_text(face = \"bold\"),\n    axis.text.x = element_text(angle = 30, hjust = 1),\n    panel.grid.minor = element_blank()\n  )\n\nWarning in scale_y_log10(labels = comma): log-10 transformation introduced infinite values.\nlog-10 transformation introduced infinite values.\n\n\nWarning: Removed 1 row containing non-finite outside the scale range\n(`stat_boxplot()`).\n\n\nWarning: Removed 1 row containing non-finite outside the scale range\n(`stat_summary()`)."
+  },
+  {
+    "objectID": "module_retention.html#churn-probability-by-segment-1",
+    "href": "module_retention.html#churn-probability-by-segment-1",
+    "title": "Retention Risk & Customer Value",
+    "section": "7.2. Churn Probability by Segment",
+    "text": "7.2. Churn Probability by Segment\n\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(scales)\n\nchurn_by_segment &lt;- fintech_clean %&gt;%\n  group_by(customer_segment) %&gt;%\n  summarise(avg_churn = mean(churn_probability, na.rm = TRUE), .groups = \"drop\") %&gt;%\n  arrange(desc(avg_churn)) %&gt;%\n  mutate(customer_segment = factor(customer_segment, levels = customer_segment))\n\nggplot(churn_by_segment, aes(x = customer_segment, y = avg_churn, fill = avg_churn)) +\n  geom_col(width = 0.7) +\n  geom_text(\n    aes(label = label_percent(accuracy = 0.1)(avg_churn)),\n    vjust = -0.4,\n    size = 4,\n    fontface = \"bold\",\n    color = \"#08306b\"\n  ) +\n  scale_fill_gradient(\n    low = \"#c6dbef\",\n    high = \"#08306b\",\n    guide = \"none\"\n  ) +\n  scale_y_continuous(\n    labels = label_percent(),\n    breaks = seq(0.30, 0.35, 0.01),\n    expand = expansion(mult = c(0, 0.08))\n  ) +\n  coord_cartesian(ylim = c(0.30, 0.35)) +\n  labs(\n    title = \"Average Churn Probability by Customer Segment\",\n    subtitle = \"Segments ranked from highest to lowest churn risk\",\n    x = \"Customer Segment\",\n    y = \"Average Churn Probability\"\n  ) +\n  theme_minimal(base_size = 13) +\n  theme(\n    plot.title = element_text(face = \"bold\"),\n    plot.subtitle = element_text(color = \"gray40\"),\n    axis.text.x = element_text(angle = 25, hjust = 1),\n    panel.grid.minor = element_blank(),\n    panel.grid.major.x = element_blank()\n  )"
+  },
+  {
+    "objectID": "module_retention.html#engagement-behavior-vs-customer-value-1",
+    "href": "module_retention.html#engagement-behavior-vs-customer-value-1",
+    "title": "Retention Risk & Customer Value",
+    "section": "7.3. Engagement Behavior vs Customer Value",
+    "text": "7.3. Engagement Behavior vs Customer Value\n\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(scales)\n\nx_limit &lt;- quantile(fintech_clean$transaction_frequency, 0.95)\ny_limit &lt;- quantile(fintech_clean$clv_millions, 0.95)\n\nggplot(fintech_clean, \n       aes(x = transaction_frequency, \n           y = clv_millions,\n           color = customer_segment)) +\n  \n  geom_point(\n    alpha = 0.4,\n    size = 2\n  ) +\n  \n  geom_smooth(\n    method = \"lm\",\n    se = FALSE,\n    linewidth = 1,\n    alpha = 0.6\n  ) +\n  \n  scale_color_brewer(\n    palette = \"Blues\"\n  ) +\n  \n  scale_y_continuous(\n    labels = comma\n  ) +\n  \n  coord_cartesian(\n    xlim = c(0, x_limit),\n    ylim = c(0, y_limit)\n  ) +\n  \n  labs(\n    title = \"Transaction Frequency vs Customer Lifetime Value\",\n    subtitle = \"Relationship between customer engagement and financial value\",\n    x = \"Transaction Frequency\",\n    y = \"Customer Lifetime Value (Millions)\",\n    color = \"Customer Segment\"\n  ) +\n  \n  theme_minimal(base_size = 13) +\n  \n  theme(\n    plot.title = element_text(face = \"bold\"),\n    plot.subtitle = element_text(color = \"gray40\"),\n    legend.position = \"bottom\",\n    panel.grid.minor = element_blank()\n  )\n\n`geom_smooth()` using formula = 'y ~ x'"
+  },
+  {
+    "objectID": "module_retention.html#geographic-distribution-of-customer-value-1",
+    "href": "module_retention.html#geographic-distribution-of-customer-value-1",
+    "title": "Retention Risk & Customer Value",
+    "section": "7.4. Geographic Distribution of Customer Value",
+    "text": "7.4. Geographic Distribution of Customer Value\nFirst, we aggregate customers by city and calculates the average CLV and number of customers.\n\nclv_location &lt;- fintech_clean %&gt;%\n  group_by(city, department, latitude, longitude) %&gt;%\n  summarise(\n    avg_clv = mean(clv_millions, na.rm = TRUE),\n    customers = n(),\n    .groups = \"drop\"\n  ) %&gt;%\n  mutate(label = city)\n\nWe identify Identify the Top 5 cities by average CLV\n\ntop_cities &lt;- clv_location %&gt;%\n  slice_max(avg_clv, n = 5)\n\nWe map it\n\ncolombia_map &lt;- map_data(\"world\", region = \"Colombia\")\n\n\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(scales)\nlibrary(plotly)\n\n\nAttaching package: 'plotly'\n\n\nThe following object is masked from 'package:ggplot2':\n\n    last_plot\n\n\nThe following object is masked from 'package:stats':\n\n    filter\n\n\nThe following object is masked from 'package:graphics':\n\n    layout\n\nmap_plot &lt;- ggplot() +\n  geom_polygon(\n    data = colombia_map,\n    aes(x = long, y = lat, group = group),\n    fill = \"#f7fbff\",\n    color = \"gray80\",\n    linewidth = 0.3\n  ) +\n  \n  geom_point(\n    data = clv_location,\n    aes(\n      x = longitude,\n      y = latitude,\n      color = avg_clv,\n      size = customers,\n      text = paste0(\n        \"&lt;b&gt;City:&lt;/b&gt; \", city,\n        \"&lt;br&gt;&lt;b&gt;Department:&lt;/b&gt; \", department,\n        \"&lt;br&gt;&lt;b&gt;Average CLV:&lt;/b&gt; \", comma(round(avg_clv, 2)),\n        \"&lt;br&gt;&lt;b&gt;Customers:&lt;/b&gt; \", customers\n      )\n    ),\n    alpha = 0.75\n  ) +\n  \n  geom_text(\n    data = top_cities,\n    aes(x = longitude, y = latitude, label = label),\n    size = 3,\n    fontface = \"bold\",\n    color = \"#08306b\",\n    vjust = -0.8\n  ) +\n  \n  scale_color_gradient(\n    low = \"#9ecae1\",\n    high = \"#08306b\",\n    labels = comma\n  ) +\n  \n  scale_size_continuous(\n    range = c(2, 8)\n  ) +\n  \n  coord_quickmap(\n    xlim = c(-80, -67),\n    ylim = c(-5, 13)\n  ) +\n  \n  labs(\n    title = \"Average Customer Lifetime Value by Location\",\n    subtitle = \"Bubble size represents number of customers; labels show top 5 cities by average CLV\",\n    x = \"Longitude\",\n    y = \"Latitude\",\n    color = \"Average CLV\\n(Millions)\",\n    size = \"Number of\\nCustomers\"\n  ) +\n  \n  theme_minimal(base_size = 13) +\n  \n  theme(\n    plot.title = element_text(face = \"bold\"),\n    plot.subtitle = element_text(color = \"gray40\"),\n    legend.position = \"right\",\n    panel.grid.minor = element_blank(),\n    axis.text = element_blank(),\n    axis.title = element_blank(),\n    panel.grid.major = element_blank()\n  )\n\nWarning in geom_point(data = clv_location, aes(x = longitude, y = latitude, :\nIgnoring unknown aesthetics: text\n\nggplotly(map_plot, tooltip = \"text\")"
+  },
+  {
+    "objectID": "module_retention.html#predicted-vs-actual-customer-lifetime-value-1",
+    "href": "module_retention.html#predicted-vs-actual-customer-lifetime-value-1",
+    "title": "Retention Risk & Customer Value",
+    "section": "7.5. Predicted vs Actual Customer Lifetime Value",
+    "text": "7.5. Predicted vs Actual Customer Lifetime Value\n\n1st option: Linear Regression for CLV\n\nclv_model &lt;- lm(\n  clv_millions ~\n    transaction_frequency +\n    active_products +\n    average_transaction_value +\n    satisfaction_score +\n    nps_score,\n  data = fintech_clean\n)\n\nsummary(clv_model)\n\n\nCall:\nlm(formula = clv_millions ~ transaction_frequency + active_products + \n    average_transaction_value + satisfaction_score + nps_score, \n    data = fintech_clean)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n -457.3  -266.6  -189.4   -25.9 17452.2 \n\nCoefficients:\n                            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)                3.385e+01  8.285e+01   0.409    0.683    \ntransaction_frequency     -1.758e+00  2.104e+00  -0.835    0.404    \nactive_products            7.926e-01  3.043e+00   0.260    0.795    \naverage_transaction_value -3.189e-07  9.056e-07  -0.352    0.725    \nsatisfaction_score         7.189e+01  1.551e+01   4.634  3.6e-06 ***\nnps_score                  1.909e-01  7.144e-01   0.267    0.789    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 791.4 on 48717 degrees of freedom\nMultiple R-squared:  0.003074,  Adjusted R-squared:  0.002971 \nF-statistic: 30.04 on 5 and 48717 DF,  p-value: &lt; 2.2e-16\n\n\n\n\nVisualization of LR Model Results:\n\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(scales)\n\n# Generate predictions\nfintech_clean$predicted_clv &lt;- predict(clv_model)\n\n# Define zoom limits (95th percentile)\nx_limit &lt;- quantile(fintech_clean$predicted_clv, 0.95)\ny_limit &lt;- quantile(fintech_clean$clv_millions, 0.95)\n\nggplot(fintech_clean,\n       aes(x = predicted_clv,\n           y = clv_millions,\n           color = clv_millions)) +\n  \n  geom_point(\n    alpha = 0.4,\n    size = 2\n  ) +\n  \n  # Perfect prediction reference line\n  geom_abline(\n    slope = 1,\n    intercept = 0,\n    color = \"#08306b\",\n    linewidth = 1,\n    linetype = \"dashed\"\n  ) +\n  \n  scale_color_gradient(\n    low = \"#9ecae1\",\n    high = \"#08306b\",\n    labels = comma\n  ) +\n  \n  scale_y_continuous(\n    labels = comma\n  ) +\n  \n  scale_x_continuous(\n    labels = comma\n  ) +\n  \n  coord_cartesian(\n    xlim = c(0, x_limit),\n    ylim = c(0, y_limit)\n  ) +\n  \n  labs(\n    title = \"Predicted vs Actual Customer Lifetime Value\",\n    subtitle = \"Dashed line represents perfect prediction\",\n    x = \"Predicted CLV (Millions)\",\n    y = \"Actual CLV (Millions)\",\n    color = \"Actual CLV\\n(Millions)\"\n  ) +\n  \n  theme_minimal(base_size = 13) +\n  \n  theme(\n    plot.title = element_text(face = \"bold\"),\n    plot.subtitle = element_text(color = \"gray40\"),\n    legend.position = \"right\",\n    panel.grid.minor = element_blank()\n  )\n\n\n\n\n\n\n\n\nFrom the visualization we can see that this model is producing only a few repeated predicted values, while the actual CLV varies a lot.\nSeveral of those predictors are likely discrete or heavily rounded:\n\nactive_products is a small integer\ntransaction_frequency may take only a limited set of values\nsatisfaction_score and nps_score are rounded scales\n\nThis linear model combines these values, so many rows end up with the same or very similar prediction.\nWe need to try with a more robust nonlinear model.\n\n\n2nd Option: Random Forest\n\nlibrary(randomForest)\n\nrandomForest 4.7-1.2\n\n\nType rfNews() to see new features/changes/bug fixes.\n\n\n\nAttaching package: 'randomForest'\n\n\nThe following object is masked from 'package:dplyr':\n\n    combine\n\n\nThe following object is masked from 'package:ggplot2':\n\n    margin\n\nrf_model &lt;- randomForest(\n  clv_millions ~\n    transaction_frequency +\n    active_products +\n    average_transaction_value +\n    satisfaction_score +\n    nps_score +\n    customer_segment +\n    age_bucket,\n  data = fintech_clean,\n  ntree = 100\n)\n\nFor this model, we need to transform the categorical variables into factors\n\nrf_data &lt;- fintech_clean %&gt;%\n  select(\n    clv_millions,\n    transaction_frequency,\n    active_products,\n    average_transaction_value,\n    satisfaction_score,\n    nps_score,\n    customer_segment,\n    age_bucket,\n    income_bracket,\n    gender,\n    occupation\n  ) %&gt;%\n  na.omit()\n\n\nrf_data &lt;- rf_data %&gt;%\n  mutate(\n    customer_segment = as.factor(customer_segment),\n    age_bucket = as.factor(age_bucket),\n    income_bracket = as.factor(income_bracket),\n    gender = as.factor(gender),\n    occupation = as.factor(occupation)\n  )\n\nWe now split into training and testing sets to evaluate the model properly.\n\nset.seed(123)\n\ntrain_index &lt;- sample(1:nrow(rf_data), 0.7 * nrow(rf_data))\n\ntrain_data &lt;- rf_data[train_index, ]\ntest_data  &lt;- rf_data[-train_index, ]\n\nWe fit the Random Forest model\n\nset.seed(123)\n\nrf_model &lt;- randomForest(\n  clv_millions ~\n    transaction_frequency +\n    active_products +\n    average_transaction_value +\n    satisfaction_score +\n    nps_score +\n    customer_segment +\n    age_bucket +\n    income_bracket +\n    gender +\n    occupation,\n  data = train_data,\n  ntree = 300,\n  importance = TRUE\n)\n\nResults summary\n\nprint(rf_model)\n\n\nCall:\n randomForest(formula = clv_millions ~ transaction_frequency +      active_products + average_transaction_value + satisfaction_score +      nps_score + customer_segment + age_bucket + income_bracket +      gender + occupation, data = train_data, ntree = 300, importance = TRUE) \n               Type of random forest: regression\n                     Number of trees: 300\nNo. of variables tried at each split: 3\n\n          Mean of squared residuals: 555729.6\n                    % Var explained: 9.54\n\n\nWe now make the predictions on the test set\n\ntest_data$predicted_clv &lt;- predict(rf_model, newdata = test_data)\n\nWe graph the results: Predicted vs Actual CLV\n\nx_limit &lt;- quantile(test_data$predicted_clv, 0.95)\ny_limit &lt;- quantile(test_data$clv_millions, 0.95)\n\nggplot(test_data, aes(x = predicted_clv, y = clv_millions, color = clv_millions)) +\n  geom_point(alpha = 0.4, size = 2) +\n  geom_abline(\n    slope = 1,\n    intercept = 0,\n    color = \"#08306b\",\n    linewidth = 1,\n    linetype = \"dashed\"\n  ) +\n  scale_color_gradient(\n    low = \"#9ecae1\",\n    high = \"#08306b\",\n    labels = comma\n  ) +\n  coord_cartesian(\n    xlim = c(0, x_limit),\n    ylim = c(0, y_limit)\n  ) +\n  labs(\n    title = \"Random Forest: Predicted vs Actual Customer Lifetime Value\",\n    subtitle = \"Dashed line represents perfect prediction\",\n    x = \"Predicted CLV (Millions)\",\n    y = \"Actual CLV (Millions)\",\n    color = \"Actual CLV\\n(Millions)\"\n  ) +\n  theme_minimal(base_size = 13) +\n  theme(\n    plot.title = element_text(face = \"bold\"),\n    plot.subtitle = element_text(color = \"gray40\"),\n    panel.grid.minor = element_blank()\n  )\n\n\n\n\n\n\n\n\nCompared to the linear regression model, the Random Forest model produces a more continuous spread of predicted values and captures more variability in CLV.\nThis improvement occurs because Random Forest models can handle nonlinear relationships and interactions between variables, which are common in customer behaviour data.\nAs a result, the predictions better reflect the complexity of customer engagement patterns and provide a more flexible and robust modelling approach than traditional linear regression."
   }
 ]
