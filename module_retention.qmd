@@ -20,7 +20,7 @@ Customers who remain active on a fintech platform tend to perform more financial
 
 Identifying customers with high churn risk allows fintech companies to implement specific strategies for retaining those customers. Organizations also need to track which customers produce the most value because this information allows them to distribute resources toward their most profitable customer groups.
 
-## 1.3. Our Proposal
+## 1.3. Module Objective
 
 The project objective is to develop a visual analytics application using R and Shiny for the interactive exploration of fintech customer data.
 
@@ -28,43 +28,64 @@ This tools would allow users to dynamically filter data, explore patterns across
 
 It is intended to help analysts compare churn risk across customer groups, examine engagement and profitability, and identify customers at risk of leaving the platform.
 
-# **2. Proposed Project Storyline**
+## 1.4. Methodology
 
-## 2.1. Project Storyline
+This module adopts an **Exploratory Modelling methodology**. It focuses on exploring relationships between customer demographics, engagement behaviors, and financial performance indicators, with particular emphasis on predicting Customer Lifetime Value (CLV).
 
-The project will deliver an interactive Shiny dashboard consisting of three analytical modules
+The analytical workflow begins with data preparation and transformation, where relevant variables are cleaned, standardized, and organized into meaningful groups such as demographic attributes, transactional behavior, engagement indicators, and financial outcomes. This step ensures that the dataset is suitable for both visual exploration and predictive modelling.
 
--   **Module 1** - Customer Overview and Exploratory Analysis
+Following data preparation, exploratory modelling techniques are applied to investigate patterns and relationships between variables. Initial visualizations are used to explore churn probability across **customer segments**, allowing the identification of groups that may be at higher risk of leaving the platform. While churn exploration provides valuable contextual insights, the primary analytical focus of this module is the development of a **predictive model for Customer Lifetime Value (CLV)**.
 
--   **Module 2** - Customer Overview & Segmentation
+A machine learning predictive modelling approach is implemented to estimate CLV using behavioral, and transactional variables. This model supports the identification of key drivers of customer value and enables comparison between predicted and observed CLV values. The results are visualized through interactive charts that allow users to evaluate model performance and explore how customer characteristics influence financial value.
 
--   **Module 3** – Exploratory Modelling: Retention Risk & Customer Value
+The final stage of the methodology integrates these analytical components into a dynamic Shiny dashboard, enabling users to interactively filter data by demographic variables such as gender, income, occupation, and age group. This interactive design supports progressive exploration, allowing users to examine churn patterns, engagement behaviors, and predicted customer value across different segments.
 
-## 2.2. Role of the Module in the Larger System
+Overall, this methodology supports data driven decision making by combining exploratory visual analysis, churn exploration, and predictive modelling of customer lifetime value, providing insights into customer profitability and retention risk.
 
-This report focuses on **Module 3 - Exploratory Modelling: Retention Risk & Customer Value.**
+# **2. Data & Environment Preparation Process**
 
-While the first two modules provide insights into the whole customer base and how they engagement with fintech services, this module focuses specifically on the customer profitability and retention risk.
+## 2.1. Evaluation of R Packages
 
-By integrating the previously analyzed behavioral indicators, satisfaction metrics, and financial metrics, this exploratory modelling approach allows us to identify the behavioral patterns associated with high-value customers while also detecting early warning signals of potential churn.
+For the development of this module and the visual analytics components, several R packages are required to support data manipulation, visualization, and formatting of analytical outputs.
 
-These insights could support decision-making for marketing strategies and if executed correctly, improve long-term profitability.
+The main packages used in this project include:
 
-# **3. Data Preparation Process**
+| Package | Use |
+|------------------------------------|------------------------------------|
+| tidyverse | Used to support the overall data science workflow, including data transformation, cleaning, and preparation of the fintech dataset. |
+| ggplot2 | Creates the core visualizations in this module, including boxplots, bar charts, scatterplots, and geographic maps. |
+| dplyr | Manipulates and summarizes the dataset, groups customers by segment or location and calculates metrics like average churn probability and average CLV. |
+| scales | Improve visualization readability by formatting large financial values, percentages, and axis labels. |
+| plotly | Adds interactivity to selected visualizations, enabling users to hover over elements. |
+| randomForest | Develop an exploratory machine learning model that predicts CLV by capturing nonlinear relationships and interactions between variables. |
 
-## 3.1. Raw Dataset
+All these packages are hosted and maintained on CRAN, ensuring compatibility with the R environment and allowing them to be installed easily.
+
+To verify that these packages are available in CRAN, the following command can be used in R:
+
+```{r}
+packages <- c("tidyverse","readxl","ggplot2","dplyr","knitr","scales","plotly","randomForest")
+
+sapply(packages, requireNamespace, quietly = TRUE)
+```
+
+The code chunk below uses p_load() of pacman package to check if the packages are installed in the computer. If they are, then they will be launched into R.
+
+```{r}
+pacman::p_load("tidyverse","readxl","ggplot2","dplyr","knitr","scales","plotly","randomForest")
+```
+
+## 2.2. Raw Dataset
 
 The analysis uses the **COFINFAD** (Colombian Fintech Financial Analytics) dataset, which contains detailed information about fintech customers. The dataset includes demographic information, financial product usage, transaction activity, customer satisfaction indicators, and predicted churn probabilities.
 
 The dataset contains approximately 48,000 customer records and more than 50 variables, providing a comprehensive view of customer behavior within a fintech platform.
 
 ```{r}
-library(tidyverse)
-library(readxl)
 fintech <- read_xlsx("customer_data.xlsx")
 ```
 
-## 3.2. Variable Grouping
+## 2.3. Variable Grouping
 
 Although the dataset contains a wide range of variables, this module primarily focuses on variables related to:
 
@@ -122,242 +143,103 @@ These information help us identify the customers background and how different gr
 | occupation     |
 | age            |
 
-## 3.3. Data Cleaning
+## 2.4. Data Cleaning
 
 Data preparation involved various steps to ensure the dataset was suitable for analysis:
 
-1.  Verify data types for numerical and categorical variables
+### 2.4.1. Verify data types for numerical and categorical variables
 
-    ```{r}
-    sapply(fintech, class)
-    ```
+```{r}
+data_types <- data.frame(
+  Variable = names(fintech),
+  Data_Type = sapply(fintech, function(x) paste(class(x), collapse = ", "))
+)
 
-2.  Check for duplicated customers
+kable(data_types, caption = "Summary of Variable Data Types")
+```
 
-    ```{r}
-    fintech %>%
-      filter(duplicated(customer_id))
-    ```
+### 2.4.2. Check for duplicated customers
 
-3.  Identify any missing values in key analytical variables
+```{r}
+duplicate_summary <- fintech %>%
+  summarise(
+    Duplicate_Customers = sum(duplicated(customer_id))
+  )
 
-    ```{r}
-    fintech %>%
-      summarise(
-        missing_clv = sum(is.na(customer_lifetime_value)),
-        missing_churn = sum(is.na(churn_probability)),
-        missing_transactions = sum(is.na(transaction_frequency))
-      )
-    ```
+kable(
+  duplicate_summary,
+  caption = "Number of Duplicate Customer IDs"
+)
+```
 
-4.  Remove incomplete observations where necessary
+### 2.4.3. Identify any missing values in key analytical variables
 
-    ```{r}
-    fintech_clean <- fintech %>%
-      filter(
-        !is.na(customer_lifetime_value),
-        !is.na(churn_probability),
-        !is.na(transaction_frequency)
-      )
-    ```
+```{r}
+missing_summary <- fintech %>%
+  summarise(
+    Customer_Lifetime_Value = sum(is.na(customer_lifetime_value)),
+    Churn_Probability = sum(is.na(churn_probability)),
+    Transaction_Frequency = sum(is.na(transaction_frequency))
+  ) %>%
+  tidyr::pivot_longer(
+    cols = everything(),
+    names_to = "Variable",
+    values_to = "Missing_Values"
+  )
+
+kable(
+  missing_summary,
+  caption = "Summary of Missing Values in Key Analytical Variables"
+)
+```
+
+### 2.4.4. Remove incomplete observations where necessary
+
+```{r}
+fintech_clean <- fintech %>%
+  filter(
+    !is.na(customer_lifetime_value),
+    !is.na(churn_probability),
+    !is.na(transaction_frequency)
+  )
+```
 
 ```{r}
 nrow(fintech) - nrow(fintech_clean)
 ```
 
-5.  Customer Lifetime Value (CLV) values were rescaled from absolute currency values to millions of Colombian Pesos in order to improve readability and interpretability in visualisations.
-
-    ```{r}
-    fintech_clean <- fintech_clean %>%
-      mutate(clv_millions = customer_lifetime_value / 1000000)
-    ```
-
-6.  Age was grouped into age buckets to facilitate segment comparison and improve interpretability of demographic patterns. This will also help when creating filters for a dynamic dashboard.
-
-    ```{r}
-    library(dplyr)
-
-    fintech_clean <- fintech_clean %>%
-      mutate(
-        age_bucket = cut(
-          age,
-          breaks = c(18, 25, 35, 45, 55, 65, Inf),
-          labels = c("18–25", "26–35", "36–45", "46–55", "56–65", "65+"),
-          right = TRUE
-        )
-      )
-    ```
-
-## 3.4. Evaluation of R Packages
-
-For the development of the prototype module and the visual analytics components, several R packages are required to support data manipulation, visualization, and formatting of analytical outputs.
-
-The main packages used in this project include:
-
-| Package | Use |
-|------------------------------------|------------------------------------|
-| tidyverse | Used to support the overall data science workflow, including data transformation, cleaning, and preparation of the fintech dataset. |
-| ggplot2 | Creates the core visualizations in this module, including boxplots, bar charts, scatterplots, and geographic maps. |
-| dplyr | Manipulates and summarizes the dataset, groups customers by segment or location and calculates metrics like average churn probability and average CLV. |
-| scales | Improve visualization readability by formatting large financial values, percentages, and axis labels. |
-| plotly | Adds interactivity to selected visualizations, enabling users to hover over elements. |
-| randomForest | Develop an exploratory machine learning model that predicts CLV by capturing nonlinear relationships and interactions between variables. |
-
-All these packages are hosted and maintained on CRAN, ensuring compatibility with the R environment and allowing them to be installed easily.
-
-To verify that these packages are available in CRAN, the following command can be used in R:
+### 2.4.5. Customer Lifetime Value (CLV) values were re scaled from absolute currency values to millions of Colombian Pesos.
 
 ```{r}
-packages <- c("tidyverse","ggplot2","dplyr","scales","plotly","randomForest")
-
-sapply(packages, requireNamespace, quietly = TRUE)
+fintech_clean <- fintech_clean %>%
+  mutate(clv_millions = customer_lifetime_value / 1000000)
 ```
 
-To verify that these packages are available in CRAN, the following command can be used in R:
-
-# **4. Selection of Visualization Techniques**
-
-The visualizations selected for this module are designed to examine the relationship between CLV, churn probability and customer engagement behavior. The charts were chosen to support a comparison across segments and a relationship analysis between continuous variables.
-
-The following visualizations are proposed for the prototype:
-
-## 4.1. CLV Distribution by Customer Segment
-
-A boxplot is used to compare the distribution of customer lifetime value across customer segments. Because CLV values are highly skewed, a logarithmic scale is used to improve readability.
-
-Fields used:
-
--   customer_segment
-
--   customer_lifetime_value
-
-This visualization helps identify which segments generate the highest financial value.
-
-## 4.2. Churn Probability by Segment
-
-A bar chart compares average churn probability across customer segments.
-
-Fields used:
-
--   customer_segment
-
--   churn_probability
-
-This graph highlights which customer groups exhibit higher retention risk.
-
-## 4.3. Engagement Behavior vs Customer Value
-
-A scatter plot examines the relationship between transaction frequency and customer lifetime value.
-
-Fields used:
-
--   transaction_frequency
-
--   customer_lifetime_value
-
--   customer_segment
-
-This chart helps determine whether highly engaged customers generate higher financial value.
-
-## 4.4. Geographic Distribution of Customer Value
-
-A geospatial map visualizes the distribution of average customer lifetime value across geographic locations.
-
-Fields used:
-
--   latitude
-
--   longitude
-
--   customer_lifetime_value
-
-This map reveals geographic patterns in fintech customer value.
-
-## 4.5. Predicted vs Actual Customer Lifetime Value
-
-A scatter plot comparing predicted and actual CLV values is included.
-
-Fields used:
-
--   customer_lifetime_value
-
--   transaction_frequency
-
--   active_products
-
--   average_transaction_value
-
--   satisfaction_score
-
--   nps_score
-
-This illustrates the relationship between the CLV values predicted by the regression model and the observed CLV in the dataset.
-
-# **5. Visualization Design and Interaction Principles**
-
-Several visual design principles were applied to ensure effective visual analytics.
-
-## Readability
-
-Visualizations use clear axis labels, minimal visual clutter, and appropriate scaling to ensure readability.
-
-## Comparison Across Segments
-
-Charts will allow comparison across customer segments and groups to highlight meaningful differences in engagement and value.
-
-## Progressive Drill-Down
-
-In the proposed dashboard, users will be able to interactively filter the dataset to explore specific segments and behavioral patterns in greater detail.
-
-## Coordinated Views
-
-Multiple visualizations are designed to work together, enabling users to analyse relationships between engagement, customer value, and retention risk.
-
-## Color and Label Choices
-
-Consistent color schemes will be used across visualizations to represent customer segments and ensure consistency.
-
-# **6. Proposed UI Design**
-
-The proposed user interface will be implemented as an interactive Shiny dashboard that allows users to dynamically explore customer retention risk and customer lifetime value through multiple coordinated visualizations.
-
-The dashboard is designed to support exploration of customer behavior and value. Users will begin by selecting demographic filters to define a specific customer group of interest. Once filters are applied, the visualizations will update automatically to display patterns related to CLV, churn risk, and engagement.
-
-## 6.1. Sketch
-
-![](sketch.jpeg){fig-align="center"}
-
-## **6.2. Sidebar Panel**
-
-It will contain filtering controls to select the subset of customers we wish to analyze.
-
-These controls will include demographic variables such as:
-
--   Gender
-
--   Income bracket
-
--   Occupation
-
--   Age group
-
-## **6.3. Main panel**
-
-It will display the visual analytics outputs of the module. These outputs include the key visualizations developed in this prototype (more details in section 4)
-
-## **6.4. Input-output mapping** 
-
-The demographic filters in the sidebar will serve as **inputs**, which dynamically filter the dataset used by each visualisation. The filtered dataset will then be passed to the output components, which generate the charts and visualizations displayed in the main panel.
-
-# **7. Prototype Visualization**
-
-## 7.1. CLV Distribution by Customer Segment
+### 2.4.6. Age was grouped into age buckets.
 
 ```{r}
-library(ggplot2)
-library(dplyr)
-library(scales)
+fintech_clean <- fintech_clean %>%
+  mutate(
+    age_bucket = cut(
+      age,
+      breaks = c(18, 25, 35, 45, 55, 65, Inf),
+      labels = c("18–25", "26–35", "36–45", "46–55", "56–65", "65+"),
+      right = TRUE
+    )
+  )
+```
 
+# **3. Exploratory Analysis and Visualizations**
+
+The visualizations selected for this module are designed to explore the relationships between Customer Lifetime Value, churn probability, and customer engagement behavior as a foundation for predictive modelling.
+
+The primary objective is to identify meaningful predictors and behavioral patterns that can inform the development of a robust predictive CLV model.
+
+## 3.1. CLV Distribution by Customer Segment
+
+With this visualization we aim to explore how Customer Lifetime Value varies across different customer segments to identify patterns in customer profitability. By examining the distribution of CLV using a logarithmic scale (CLV values are highly skewed), the analysis highlights differences in financial contribution between segments.
+
+```{r}
 ggplot(fintech_clean, 
        aes(x = customer_segment, 
            y = clv_millions,
@@ -403,13 +285,15 @@ ggplot(fintech_clean,
   )
 ```
 
-## 7.2. Churn Probability by Segment
+From this graph, it can be observed that the distribution of CLV varies significantly across customer segments. "Power" and "Regular" customers exhibit substantially higher median CLV values compared to "Occasional" and "Inactive" customers, indicating that higher levels of engagement are strongly associated with greater long-term financial contribution.
+
+These findings highlight the importance of prioritizing higher engagement segments in customer retention strategies and support the development of predictive models aimed at identifying customers with strong value potential.
+
+## 3.2. Churn Probability by Segment
+
+We want to explore differences in churn probability across customer segments. By comparing segments, the analysis provides insight into which groups may require targeted retention strategies.
 
 ```{r}
-library(ggplot2)
-library(dplyr)
-library(scales)
-
 churn_by_segment <- fintech_clean %>%
   group_by(customer_segment) %>%
   summarise(avg_churn = mean(churn_probability, na.rm = TRUE), .groups = "drop") %>%
@@ -452,13 +336,15 @@ ggplot(churn_by_segment, aes(x = customer_segment, y = avg_churn, fill = avg_chu
   )
 ```
 
-## 7.3. Engagement Behavior vs Customer Value
+The results indicate that churn probability is relatively similar across segments, with only minor variations.
+
+This suggests that churn risk alone may not strongly differentiate segments, highlighting the importance of combining churn indicators with behavioral and financial variables when developing the predictive CLV model.
+
+## 3.3. Engagement Behavior vs Customer Value
+
+Understanding the relationship between transaction frequency and Customer Lifetime Value is essential for identifying behavioral indicators that may serve as strong predictors in the development of the predictive model.
 
 ```{r}
-library(ggplot2)
-library(dplyr)
-library(scales)
-
 x_limit <- quantile(fintech_clean$transaction_frequency, 0.95)
 y_limit <- quantile(fintech_clean$clv_millions, 0.95)
 
@@ -510,9 +396,15 @@ ggplot(fintech_clean,
   )
 ```
 
-## 7.4. Geographic Distribution of Customer Value
+The result of this scatter plot suggest that while higher transaction frequency is generally associated with higher customer value, the relationship is not strictly linear, as significant variability in CLV exists across all frequency levels. Additional behavioral and demographic variables will be needed to improve the accuracy and robustness of the predictive CLV model.
 
-First, we aggregate customers by city and calculates the average CLV and number of customers.
+## 3.4. Geographic Distribution of Customer Value
+
+By mapping CLV by city we can identify locations associated with higher value customers and highlight geographic areas that may contribute disproportionately to overall revenue.
+
+In order to visualize the Top 5 cities with the highest average CLV, we need to follow the next steps:
+
+1.  First, we aggregate customers by city and calculates the average CLV and number of customers.
 
 ```{r}
 clv_location <- fintech_clean %>%
@@ -525,25 +417,20 @@ clv_location <- fintech_clean %>%
   mutate(label = city)
 ```
 
-We identify Identify the Top 5 cities by average CLV
+2.  We identify Identify the Top 5 cities by average CLV
 
 ```{r}
 top_cities <- clv_location %>%
   slice_max(avg_clv, n = 5)
 ```
 
-We map it
+3.  We map it
 
 ```{r}
 colombia_map <- map_data("world", region = "Colombia")
 ```
 
 ```{r}
-library(ggplot2)
-library(dplyr)
-library(scales)
-library(plotly)
-
 map_plot <- ggplot() +
   geom_polygon(
     data = colombia_map,
@@ -618,9 +505,19 @@ map_plot <- ggplot() +
 ggplotly(map_plot, tooltip = "text")
 ```
 
-## 7.5. Predicted vs Actual Customer Lifetime Value
+The results reveal that the largest cities in Colombia (Bogotá and Medellín), are not necessarily the locations with the highest average CLV. Instead, several smaller cities exhibit higher value customer concentrations.
 
-### 1st option: Linear Regression for CLV
+This finding suggests that growth opportunities may exist outside major metropolitan areas, indicating that focusing marketing, retention, and expansion strategies on smaller cities could represent an effective approach for increasing profitability.
+
+These geographic patterns also provide useful context for enhancing the predictive CLV model by considering demographic factors as potential predictors of customer value.
+
+# **4. Predictive Modeling**
+
+Following the exploratory analysis, predictive modelling techniques were applied to estimate Customer Lifetime Value. Two predictive approaches were tested to evaluate their performance and robustness. A traditional Linear Regression model and a Random Forest model.
+
+## 4.1. Linear Regression
+
+Independent variables were selected based on their relevance to customer engagement and financial activity, including transaction frequency, number of active products, average transaction value, customer satisfaction score, and Net Promoter Score (NPS).
 
 ```{r}
 clv_model <- lm(
@@ -636,13 +533,11 @@ clv_model <- lm(
 summary(clv_model)
 ```
 
-### Visualization of LR Model Results:
+Once the variables were defined, the model was fitted using the cleaned dataset to quantify the relationship between engagement indicators and CLV.
+
+The model served as a baseline predictive method, allowing for the interpretation of coefficient estimates and the assessment of how individual predictors contribute to customer value.
 
 ```{r}
-library(ggplot2)
-library(dplyr)
-library(scales)
-
 # Generate predictions
 fintech_clean$predicted_clv <- predict(clv_model)
 
@@ -716,15 +611,15 @@ Several of those predictors are likely **discrete or heavily rounded**:
 
 -   `satisfaction_score` and `nps_score` are rounded scales
 
-This linear model combines these values, so many rows end up with the same or very similar prediction.
+The Linear Regresion model combines these values, so many rows end up with the same or very similar prediction.
 
-We need to try with a **more robust nonlinear model.**
+To address this limitation, a Random Forest model was developed to better capture non-linear relationships and interactions among variables, ultimately improving the accuracy and robustness of CLV predictions.
 
-### 2nd Option: Random Forest
+## 4.2. Random Forest
+
+The model incorporates key behavioral, financial, and demographic variables. These variables represent important indicators of customer engagement and financial contribution.
 
 ```{r}
-library(randomForest)
-
 rf_model <- randomForest(
   clv_millions ~
     transaction_frequency +
@@ -739,10 +634,9 @@ rf_model <- randomForest(
 )
 ```
 
-For this model, we need to transform the categorical variables into factors
+For this model, categorical variables were converted into factor variables to ensure they were properly handled during model training.
 
 ```{r}
-
 rf_data <- fintech_clean %>%
   select(
     clv_millions,
@@ -771,7 +665,7 @@ rf_data <- rf_data %>%
   )
 ```
 
-We now split into training and testing sets to evaluate the model properly.
+The dataset was then divided into training and testing subsets to enable proper evaluation of the model's predictive performance.
 
 ```{r}
 set.seed(123)
@@ -782,7 +676,7 @@ train_data <- rf_data[train_index, ]
 test_data  <- rf_data[-train_index, ]
 ```
 
-We fit the Random Forest model
+The model was fitted using the training dataset and the selected behavioral and demographic predictor variables.
 
 ```{r}
 set.seed(123)
@@ -805,48 +699,86 @@ rf_model <- randomForest(
 )
 ```
 
-Results summary
+The results of the Random Forest model were first examined to evaluate its structure and overall performance characteristics.
 
 ```{r}
-print(rf_model)
+rf_summary <- data.frame(
+  Metric = c(
+    "Number of Trees",
+    "Number of Variables Tried at Each Split (mtry)",
+    "Mean of Squared Residuals",
+    "Percentage Variance Explained"
+  ),
+  Value = c(
+    rf_model$ntree,
+    rf_model$mtry,
+    round(rf_model$mse[rf_model$ntree], 4),
+    round(rf_model$rsq[rf_model$ntree] * 100, 2)
+  )
+)
+
+knitr::kable(
+  rf_summary,
+  caption = "Random Forest Model Summary"
+)
 ```
 
-We now make the predictions on the test set
+To better understand the contribution of each predictor to the Random Forest model, a variable importance analysis was conducted.
 
 ```{r}
-test_data$predicted_clv <- predict(rf_model, newdata = test_data)
-```
 
-We graph the results: Predicted vs Actual CLV
+# Extract importance values from the fitted model
+importance_matrix <- randomForest::importance(rf_model)
 
-```{r}
-x_limit <- quantile(test_data$predicted_clv, 0.95)
-y_limit <- quantile(test_data$clv_millions, 0.95)
+# Select available importance metric
+importance_values <- if ("%IncMSE" %in% colnames(importance_matrix)) {
+  importance_matrix[, "%IncMSE"]
+} else if ("IncNodePurity" %in% colnames(importance_matrix)) {
+  importance_matrix[, "IncNodePurity"]
+} else {
+  importance_matrix[, 1]
+}
 
-ggplot(test_data, aes(x = predicted_clv, y = clv_millions, color = clv_millions)) +
-  geom_point(alpha = 0.4, size = 2) +
-  geom_abline(
-    slope = 1,
-    intercept = 0,
-    color = "#08306b",
-    linewidth = 1,
-    linetype = "dashed"
-  ) +
-  scale_color_gradient(
-    low = "#9ecae1",
+# Create dataframe
+importance_df <- data.frame(
+  Variable = rownames(importance_matrix),
+  Importance = importance_values
+)
+
+# Convert to relative importance (%)
+importance_df <- importance_df %>%
+  mutate(
+    Importance_Scaled = Importance / max(Importance)
+  ) %>%
+  arrange(Importance_Scaled) %>%
+  mutate(
+    Variable = factor(Variable, levels = Variable)
+  )
+
+# Plot variable importance
+ggplot(
+  importance_df,
+  aes(
+    x = Variable,
+    y = Importance_Scaled,
+    fill = Importance_Scaled
+  )
+) +
+  geom_col(width = 0.7) +
+  coord_flip() +
+  scale_fill_gradient(
+    low = "#c6dbef",
     high = "#08306b",
-    labels = comma
+    guide = "none"
   ) +
-  coord_cartesian(
-    xlim = c(0, x_limit),
-    ylim = c(0, y_limit)
+  scale_y_continuous(
+    labels = percent_format()
   ) +
   labs(
-    title = "Random Forest: Predicted vs Actual Customer Lifetime Value",
-    subtitle = "Dashed line represents perfect prediction",
-    x = "Predicted CLV (Millions)",
-    y = "Actual CLV (Millions)",
-    color = "Actual CLV\n(Millions)"
+    title = "Variable Importance in Random Forest Model",
+    subtitle = "Predictors ranked by relative contribution to CLV prediction",
+    x = "Predictor Variables",
+    y = "Relative Importance (%)"
   ) +
   theme_minimal(base_size = 13) +
   theme(
@@ -856,14 +788,86 @@ ggplot(test_data, aes(x = predicted_clv, y = clv_millions, color = clv_millions)
   )
 ```
 
+Although "customer_segment" appears as the most important predictor in the Random Forest model, this result is expected because the variable already captures broad differences in customer engagement and loyalty. For this reason, the more analytically meaningful findings are the strong contributions of "satisfaction_score" and "nps_score", which emerge as the next most influential predictors of CLV.
+
+Having identified the key drivers of customer value, the next step involved applying the trained model to generate predictions and evaluate its performance on unseen data.
+
+Predicted CLV values were generated using the trained Random Forest model and applied to the testing dataset.
+
+```{r}
+test_data$predicted_clv <- predict(rf_model, newdata = test_data)
+```
+
+A scatter plot comparing predicted and actual CLV values was created to visually assess the performance of the Random Forest model.
+
+```{r}
+x_limit <- quantile(test_data$predicted_clv, 0.95, na.rm = TRUE)
+y_limit <- quantile(test_data$clv_millions, 0.95, na.rm = TRUE)
+
+rf_plot <- ggplot(
+  test_data,
+  aes(
+    x = predicted_clv,
+    y = clv_millions,
+    color = clv_millions,
+    text = paste0(
+      "Predicted CLV: ", comma(round(predicted_clv, 2)),
+      "<br>Actual CLV: ", comma(round(clv_millions, 2))
+    )
+  )
+) +
+  geom_point(alpha = 0.4, size = 2) +
+  
+  geom_abline(
+    slope = 1,
+    intercept = 0,
+    color = "#08306b",
+    linewidth = 1,
+    linetype = "dashed"
+  ) +
+  
+  scale_color_gradient(
+    low = "#9ecae1",
+    high = "#08306b",
+    labels = comma
+  ) +
+  
+  coord_cartesian(
+    xlim = c(0, x_limit),
+    ylim = c(0, y_limit)
+  ) +
+  
+  labs(
+    title = "Random Forest: Predicted vs Actual Customer Lifetime Value",
+    subtitle = "Dashed line represents perfect prediction",
+    x = "Predicted CLV (Millions)",
+    y = "Actual CLV (Millions)",
+    color = "Actual CLV\n(Millions)"
+  ) +
+  
+  theme_minimal(base_size = 13) +
+  
+  theme(
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(color = "gray40"),
+    panel.grid.minor = element_blank()
+  )
+
+ggplotly(rf_plot, tooltip = "text")
+```
+
 Compared to the linear regression model, the Random Forest model produces a more continuous spread of predicted values and captures more variability in CLV.
 
-This improvement occurs because Random Forest models can handle nonlinear relationships and interactions between variables, which are common in customer behaviour data.
+This improvement occurs because Random Forest models can handle nonlinear relationships and interactions between variables, which are common in customer behavior data.
 
-As a result, the predictions better reflect the complexity of customer engagement patterns and provide a **more flexible and robust modelling approach** than traditional linear regression.
+As a result, the predictions better reflect the complexity of customer engagement patterns and provide a more flexible and robust modelling approach than traditional linear regression.
 
-# **8. Conclusion**
+# **5. Conclusion**
 
-The Retention Risk & Customer Value module provides valuable insights into how customer engagement influence long-term profitability within the fintech platform. By analyzing key indicators, this module helps identifying high-value customers and segments that may be at risk of disengagement.
+The Retention Risk & Customer Value module provides valuable insights into the factors that influence Customer Lifetime Value and profitability within a fintech platform. Through exploratory modelling and predictive analysis, this module demonstrates how customer engagement behaviors, demographic characteristics, and transactional activity contribute to variations in customer value. While churn-related indicators were explored to understand potential retention risks, the primary focus was the development and evaluation of predictive models capable of estimating future customer value.
 
-Overall, the prototype developed in this module demonstrates how data exploration can support data-driven decision making across multiple business functions. The proposed Shiny application could provide a powerful tool for fintech organizations seeking to optimize customer strategy and maximize business value in the long run.
+The implementation of both Linear Regression and Random Forest models highlighted the advantages of using more flexible machine learning techniques to improve predictive accuracy. Enhanced predictive capabilities enable organizations to anticipate customer value more effectively, allowing businesses to allocate resources more strategically. These improvements support more informed decisions across marketing, sales, and customer retention initiatives.
+
+Overall, the module demonstrates how predictive modelling can transform exploratory insights into actionable forecasts.
+
+The proposed Shiny application will provide an interactive environment for analyzing customer value drivers and evaluating model performance, offering fintech organizations a practical tool to optimize engagement strategies, prioritize high-value segments, and maximize business profitability.
