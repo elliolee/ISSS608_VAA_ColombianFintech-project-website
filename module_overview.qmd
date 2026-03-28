@@ -452,7 +452,7 @@ These filters enable users to dynamically explore demographic and behavioural pa
 
 The main panel displays the analytical visualisations.
 
-![](images/clipboard-1902626649.jpeg)
+![](images/clipboard-2518865945.png)
 
 **Top Section – KPI Cards**
 
