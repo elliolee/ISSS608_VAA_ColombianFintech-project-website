@@ -1,6 +1,5 @@
 project:
   type: website
-
 website:
   title: "Colombian Fintech Customer Analytics"
   navbar:
