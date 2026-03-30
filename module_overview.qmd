@@ -2,10 +2,6 @@
 title: "Customer Overview & Segmentation"
 ---
 
-# Customer Overview & Segmentation
-
-This page will contain the prototype, analysis, and findings for Module 1.
-
 # 1 Introduction
 
 ## 1.1 Project Background

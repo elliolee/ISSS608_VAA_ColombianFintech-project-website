@@ -7,7 +7,93 @@ body {
 
 .navbar {
   font-weight: 500;
+  background: #0a0f1a !important;
+  border-bottom: none !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,.07), 0 4px 20px rgba(0,0,0,.35) !important;
+  padding: .55rem 2rem !important;
 }
+
+.navbar-brand,
+.navbar-brand:hover {
+  color: #fff !important;
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+
+.navbar .nav-link {
+  color: rgba(255,255,255,.72) !important;
+  font-weight: 500;
+  font-size: .92rem;
+  transition: color .15s;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  color: #10b981 !important;
+}
+
+.navbar-nav .dropdown-menu {
+  background: #141922 !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  box-shadow: 0 8px 28px rgba(0,0,0,.45) !important;
+  border-radius: 8px !important;
+}
+
+.navbar-nav .dropdown-item {
+  color: rgba(255,255,255,.75) !important;
+  font-size: .9rem;
+}
+
+.navbar-nav .dropdown-item:hover {
+  background: rgba(16,185,129,.12) !important;
+  color: #fff !important;
+}
+
+.quarto-search-button,
+.aa-DetachedSearchButtonIcon {
+  color: rgba(255,255,255,.55) !important;
+}
+
+.navbar-toggler {
+  border-color: rgba(255,255,255,.25) !important;
+}
+.navbar-toggler-icon {
+  filter: invert(1) opacity(.7);
+}
+
+.navbar .nav-link.active,
+.navbar .nav-item.active .nav-link {
+  color: #10b981 !important;
+  font-weight: 600;
+}
+
+.quarto-title h1.title {
+  color: #0d1f2d;
+  font-weight: 800;
+  border-bottom: 3px solid #10b981;
+  padding-bottom: .4rem;
+  display: inline-block;
+}
+
+#TOC .active > a,
+#quarto-sidebar .active > a {
+  color: #0f766e !important;
+  font-weight: 600;
+  border-left-color: #10b981 !important;
+}
+
+.quarto-title-meta {
+  color: #6b7280;
+  font-size: .82rem;
+}
+
+.quarto-title-meta-heading {
+  font-size: .72rem !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #9ca3af !important;
+}
+
 
 .hero-section {
   background: linear-gradient(135deg, #0b1f3a 0%, #123c69 45%, #0f766e 100%);
@@ -251,7 +337,7 @@ h3 {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('bogota-night.png');
+  background-image: url('images/bogota-night.png');
   background-size: cover;
   background-position: center 30%;
   z-index: 0;
@@ -425,3 +511,4 @@ h3 {
   .stat-divider   { display: none; }
   .tech-row       { justify-content: flex-start; }
 }
+
