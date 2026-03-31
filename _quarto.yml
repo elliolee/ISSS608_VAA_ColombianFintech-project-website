@@ -1,5 +1,6 @@
 project:
   type: website
+
 website:
   title: "Colombian Fintech Customer Analytics"
   navbar:
@@ -8,19 +9,17 @@ website:
         text: Home
       - text: Project
         menu:
-          - href: proposal.qmd
+          - href: project/proposal.qmd
             text: Proposal
-          - href: storyboard.qmd
-            text: Storyboard
-          - href: meeting_minutes.qmd
+          - href: project/meeting_minutes.qmd
             text: Meeting Minutes
       - text: Modules
         menu:
-          - href: module_overview.qmd
+          - href: modules/module_overview.qmd
             text: Customer Overview & Segmentation
-          - href: module_engagement.qmd
+          - href: modules/module_engagement.qmd
             text: Customer Engagement & Experience
-          - href: module_retention.qmd
+          - href: modules/module_retention.qmd
             text: Retention Risk & Customer Value
       - href: poster.qmd
         text: Poster
@@ -36,4 +35,4 @@ format:
     toc: true
     page-layout: full
 
-author: Group 7
+author: "Group 7"

@@ -1,7 +1,0 @@
----
-title: "Meeting Minutes"
----
-
-# Meeting Minutes
-
-This page will document project meetings, decisions, and action items.

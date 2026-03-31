@@ -41,7 +41,7 @@ main.content,.quarto-container{max-width:100%!important;padding:0!important;marg
 
 .hero-bg{
   position:absolute;inset:0;
-  background-image:url('bogota-night.png');
+  background-image:url('images/bogota-night.png');
   background-size:cover;
   background-position:center 30%;
   z-index:0;
@@ -287,20 +287,20 @@ main.content,.quarto-container{max-width:100%!important;padding:0!important;marg
       how they engage, and which groups are at highest risk of churning.
     </p>
     <div class="hero-btns">
-      <a href="proposal.qmd" class="hbtn hbtn-solid">Explore the Project</a>
+      <a href="project/proposal.html" class="hbtn hbtn-solid">Explore the Project</a>
       <a href="https://ligen.shinyapps.io/isss608_vaa_colombianfintech-project-shiny/"
          class="hbtn hbtn-border" target="_blank">▶ Launch Shiny App</a>
     </div>
   </div>
 
   <div class="hero-pills">
-    <a href="module_overview.qmd" class="hero-pill">
+    <a href="modules/module_overview.html" class="hero-pill">
       <span class="hero-pill-icon">👥</span> Customer Overview
     </a>
-    <a href="module_engagement.qmd" class="hero-pill">
+    <a href="modules/module_engagement.html" class="hero-pill">
       <span class="hero-pill-icon">📱</span> Engagement
     </a>
-    <a href="module_retention.qmd" class="hero-pill">
+    <a href="modules/module_retention.html" class="hero-pill">
       <span class="hero-pill-icon">🎯</span> Retention &amp; Value
     </a>
     <a href="https://ligen.shinyapps.io/isss608_vaa_colombianfintech-project-shiny/"
@@ -509,7 +509,7 @@ main.content,.quarto-container{max-width:100%!important;padding:0!important;marg
         <h4>Project Proposal</h4>
         <p>Full proposal including dataset overview, data preparation notes,
         module methodology, prototype sketches, and project schedule.</p>
-        <a href="proposal.qmd" class="del-link">View Proposal →</a>
+        <a href="project/proposal.html" class="del-link">View Proposal →</a>
       </div>
       <div class="del-card">
         <div class="del-icon">
@@ -521,7 +521,7 @@ main.content,.quarto-container{max-width:100%!important;padding:0!important;marg
         <h4>Module Write-ups</h4>
         <p>Technical documentation per module: data wrangling, visualisation design
         rationale, interaction principles, and Shiny UI decisions.</p>
-        <a href="module_overview.qmd" class="del-link">View Modules →</a>
+        <a href="modules/module_overview.html" class="del-link">View Modules →</a>
       </div>
       <div class="del-card">
         <div class="del-icon">
