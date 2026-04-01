@@ -21,25 +21,35 @@ Customer Structure
 ---
 
 ## 🧱 Website Structure
-
-The website is built using **Quarto** and organized into modular pages:
-├── index.qmd                # Homepage (entry + storytelling)
+```text
+.
+├── _quarto.yml
+├── index.qmd
+├── poster.qmd
+├── user_guide.qmd
+├── shiny.qmd
+├── styles.css
+├── images/
+├── data/
 ├── project/
 │   ├── proposal.qmd
-│   └── meeting_minutes.qmd
+│   ├── meeting_minutes.qmd
+│   └── storyboard.qmd
 ├── modules/
 │   ├── module_overview.qmd
 │   ├── module_engagement.qmd
 │   └── module_retention.qmd
-├── poster.qmd
-├── user_guide.qmd
-├── shiny.qmd               # (optional landing page)
-├── images/
-├── styles.css
-├── _quarto.yml
-├── docs/                   # Rendered site (for GitHub Pages)
+├── docs/
+│   ├── index.html
+│   ├── poster.html
+│   ├── shiny.html
+│   ├── user_guide.html
+│   ├── images/
+│   ├── modules/
+│   └── project/
+├── .gitignore
+└── ISSS608_VAA_ColombianFintech-project-website.Rproj
 
----
 
 ## 🔗 Integration with Shiny App
 
