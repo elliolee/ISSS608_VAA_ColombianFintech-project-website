@@ -49,7 +49,8 @@ Customer Structure
 │   └── project/
 ├── .gitignore
 └── ISSS608_VAA_ColombianFintech-project-website.Rproj
-
+```
+---
 
 ## 🔗 Integration with Shiny App
 
