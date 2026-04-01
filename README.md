@@ -24,7 +24,7 @@ Customer Structure
 ```text
 .
 ├── _quarto.yml
-├── index.qmd
+├── index.qmd  # Homepage (entry + storytelling)
 ├── poster.qmd
 ├── user_guide.qmd
 ├── shiny.qmd
@@ -33,20 +33,12 @@ Customer Structure
 ├── data/
 ├── project/
 │   ├── proposal.qmd
-│   ├── meeting_minutes.qmd
-│   └── storyboard.qmd
+│   └── meeting_minutes.qmd
 ├── modules/
 │   ├── module_overview.qmd
 │   ├── module_engagement.qmd
 │   └── module_retention.qmd
 ├── docs/
-│   ├── index.html
-│   ├── poster.html
-│   ├── shiny.html
-│   ├── user_guide.html
-│   ├── images/
-│   ├── modules/
-│   └── project/
 ├── .gitignore
 └── ISSS608_VAA_ColombianFintech-project-website.Rproj
 ```
