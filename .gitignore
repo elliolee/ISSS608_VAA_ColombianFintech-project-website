@@ -1,8 +1,18 @@
-.Rproj.user
+# R / RStudio
+.Rproj.user/
 .Rhistory
 .RData
 .Ruserdata
+
+# Quarto cache / temp
 /.quarto/
 **/*.quarto_ipynb
+
+# macOS
 .DS_Store
+
+# old local render output (if no longer used)
+_site/
+
+# misc
 module_retention.rmarkdown

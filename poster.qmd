@@ -2,6 +2,4 @@
 title: "Poster"
 ---
 
-# Project Poster
-
-This page will present the final poster and supporting materials.
+![Project Poster](images/poster.jpg)
