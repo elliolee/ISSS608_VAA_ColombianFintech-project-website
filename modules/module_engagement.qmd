@@ -156,6 +156,43 @@ customer_m2 <- customer_data %>%
   )
 ```
 
+```{r}
+project_teal <- c(
+  "Not Own" = "#A7DDE3",
+  "Own" = "#2D8F9B"
+)
+
+project_seq_4 <- c(
+  "0" = "#DCEFF1",
+  "1" = "#A7DDE3",
+  "2" = "#6FC7CF",
+  "3+" = "#2D8F9B"
+)
+
+project_seq_4_usage <- c(
+  "0-1" = "#DCEFF1",
+  "2" = "#A7DDE3",
+  "3" = "#6FC7CF",
+  "4+" = "#2D8F9B"
+)
+
+project_seq_5 <- c(
+  "2" = "#DCEFF1",
+  "3" = "#B7DDE2",
+  "4" = "#89C8CF",
+  "5" = "#5DB2BA",
+  "6" = "#2D8F9B"
+)
+
+complaint_palette <- c(
+  "Customer service" = "#2D8F9B",
+  "Fees" = "#49A8B3",
+  "Transaction issues" = "#63BEC7",
+  "Account security" = "#85D0D5",
+  "App performance" = "#A7DDE3"
+)
+```
+
 The shared project-level cleaning logic also includes auditing duplicate or overlapping fields, validating range consistency, and checking cross-field consistency. In this module, special attention is given to complaint-related missing values because they directly affect the interpretation of service issue patterns. In addition, support ticket counts and feature usage diversity are grouped into diagnostic buckets to support clearer comparison in the prototype visualisations.
 
 ## 3.5 Validation of Key Variables
@@ -359,6 +396,7 @@ p1 <- ggplot(
   )
 ) +
   geom_col(position = "dodge") +
+  scale_fill_manual(values = project_teal) +
   labs(
     title = "Average Feature Usage Diversity by Product Ownership",
     x = "Product Type",
@@ -366,7 +404,10 @@ p1 <- ggplot(
     fill = "Ownership Status"
   ) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 20, hjust = 1))
+  theme(
+    axis.text.x = element_text(angle = 20, hjust = 1),
+    legend.position = "right"
+  )
 
 p1
 ```
@@ -424,6 +465,7 @@ p2 <- ggplot(
   )
 ) +
   geom_col(position = "dodge") +
+  scale_fill_manual(values = project_teal) +
   labs(
     title = "Average App Login Frequency by Product Ownership",
     x = "Product Type",
@@ -431,10 +473,12 @@ p2 <- ggplot(
     fill = "Ownership Status"
   ) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 20, hjust = 1))
+  theme(
+    axis.text.x = element_text(angle = 20, hjust = 1),
+    legend.position = "right"
+  )
 
 p2
-
 ```
 
 This visualisation extends the engagement analysis from usage breadth to usage intensity. However, unlike feature usage diversity, average app login frequency appears almost identical between product owners and non-owners across all product categories. This suggests that login frequency is not a strong differentiator of customer engagement in the current dataset, and that breadth of feature use may be more informative than simple access frequency.
@@ -453,7 +497,8 @@ p3 <- ggplot(
     fill = satisfaction_score
   )
 ) +
-  geom_boxplot(alpha = 0.8, outlier.alpha = 0.2) +
+  geom_boxplot(alpha = 0.85, outlier.alpha = 0.2) +
+  scale_fill_manual(values = project_seq_5) +
   labs(
     title = "NPS Score by Satisfaction Score",
     x = "Satisfaction Score",
@@ -480,7 +525,8 @@ p4 <- ggplot(
     fill = feature_usage_bucket
   )
 ) +
-  geom_boxplot(alpha = 0.8, outlier.alpha = 0.2) +
+  geom_boxplot(alpha = 0.85, outlier.alpha = 0.2) +
+  scale_fill_manual(values = project_seq_4_usage) +
   labs(
     title = "NPS Score by Feature Usage Diversity Bucket",
     x = "Feature Usage Diversity Bucket",
@@ -507,22 +553,69 @@ p5 <- ggplot(
   complaint_summary_actual,
   aes(
     x = fct_reorder(complaint_topics, n),
-    y = n
+    y = n,
+    fill = complaint_topics
   )
 ) +
-  geom_col() +
+  geom_col(show.legend = FALSE) +
+  geom_text(
+    aes(label = n),
+    hjust = -0.15,
+    size = 3.5
+  ) +
   coord_flip() +
+  scale_fill_manual(values = complaint_palette) +
   labs(
     title = "Complaint Topics Distribution (Excluding 'None')",
     x = "Complaint Topic",
     y = "Number of Customers"
   ) +
+  expand_limits(y = max(complaint_summary_actual$n) + 250) +
   theme_minimal()
 
 p5
 ```
 
 In the data preparation process, missing complaint records were recoded as “None”. To understand the actual composition of service issues, this visualisation focuses only on customers with recorded complaints. The results show that complaint frequencies are relatively evenly distributed across customer service, fees, transaction issues, account security, and app performance. This suggests that service friction is spread across multiple dimensions of the platform rather than concentrated in one dominant issue category.
+
+For poster vision:
+
+```{r}
+p5_poster <- ggplot(
+  complaint_summary_actual,
+  aes(
+    x = n,
+    y = fct_reorder(complaint_topics, n),
+    color = complaint_topics
+  )
+) +
+  geom_segment(
+    aes(
+      x = 0,
+      xend = n,
+      y = complaint_topics,
+      yend = complaint_topics
+    ),
+    linewidth = 2,
+    show.legend = FALSE
+  ) +
+  geom_point(size = 5, show.legend = FALSE) +
+  geom_text(
+    aes(label = n),
+    hjust = -0.2,
+    size = 3.5
+  ) +
+  scale_color_manual(values = complaint_palette) +
+  expand_limits(x = max(complaint_summary_actual$n) + 250) +
+  labs(
+    title = "Complaint Topics Distribution (Excluding 'None')",
+    x = "Number of Customers",
+    y = "Complaint Topic"
+  ) +
+  theme_minimal()
+
+p5_poster
+```
 
 ## 7.6 NPS Score by Support Ticket Bucket
 
@@ -537,7 +630,8 @@ p6 <- ggplot(
     fill = support_ticket_bucket
   )
 ) +
-  geom_boxplot(alpha = 0.8, outlier.alpha = 0.2) +
+  geom_boxplot(alpha = 0.85, outlier.alpha = 0.2) +
+  scale_fill_manual(values = project_seq_4) +
   labs(
     title = "NPS Score by Support Ticket Bucket",
     x = "Support Ticket Bucket",
