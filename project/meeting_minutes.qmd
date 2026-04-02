@@ -56,7 +56,7 @@ title: "Meeting Minutes"
 
 -   Ricardo will continue reviewing the dataset and start working on data preparation tasks, particularly checking data quality and preparing variables for analysis.
 
--   Bingqian will begin exploring possible visualisation ideas for the Customer Engagement & Experience module and document the meeting minutes.
+-   Bingqian will begin exploring possible visualisation ideas for the Customer Overview & Segmentation module and document the meeting minutes.
 
 -   The team agreed to review the first draft proposal together and refine the analytical storyline before the submission deadline.
 
@@ -88,9 +88,10 @@ title: "Meeting Minutes"
 -   Ricardo raised a concern regarding the performance of predictive modelling in **Module 3**. When running the full customer dataset of 48,723 records with machine learning models such as Random Forest, the computation time was significantly long and caused the R session to become unresponsive in some cases.
 
 -   The team discussed possible approaches to address this issue:\
-    - Reduce the dataset size by applying **random sampling** (e.g., 10,000 to 15,000 records) for model training and evaluation within the Shiny app, while using the full dataset for descriptive visualisations.\
-    - Switch to a **lighter model** such as logistic regression or decision tree for the Shiny prototype, and reserve more complex models for the report write-up only.\
-    - Pre-compute model outputs and **cache the results** as RDS files so that the Shiny app loads stored results rather than rerunning the model each time.
+
+    -   Reduce the dataset size by applying **random sampling** (e.g., 10,000 to 15,000 records) for model training and evaluation within the Shiny app, while using the full dataset for descriptive visualisations.\
+    -   Switch to a **lighter model** such as logistic regression or decision tree for the Shiny prototype, and reserve more complex models for the report write-up only.\
+    -   Pre-compute model outputs and **cache the results** as RDS files so that the Shiny app loads stored results rather than rerunning the model each time.
 
 -   After discussion, the team reached a **consensus** that Ricardo will implement a combination of random sampling and result caching for the Shiny prototype. The full model results will be documented and discussed in the module write-up report rather than computed live in the app.
 
@@ -104,9 +105,10 @@ title: "Meeting Minutes"
     **- Branch management**: The team had initially been working directly on the **main branch**, which caused issues when multiple members pushed changes at the same time. Li Gen suggested that each member work on their own **feature branch** and create pull requests to merge into main, to reduce the risk of conflicts going forward.
 
 -   The team agreed to adopt the following GitHub workflow going forward:\
-    - Each member works on a dedicated branch.\
-    - Pull requests are reviewed by at least one other team member before merging into main.\
-    - The **.gitignore** file will be updated to exclude temporary R files (.RData, .RDataTmp, .Rhistory) and large data files.
+
+    -   Each member works on a dedicated branch.\
+    -   Pull requests are reviewed by at least one other team member before merging into main.\
+    -   The **.gitignore** file will be updated to exclude temporary R files (.RData, .RDataTmp, .Rhistory) and large data files.
 
 -   Li Gen will update the **.gitignore** and push the updated file to the main branch, and will also update the **\_quarto.yml** render list to exclude the **module_retention.rmarkdown** legacy file to prevent rendering errors.
 
@@ -119,7 +121,7 @@ title: "Meeting Minutes"
 
 -   The team agreed to meet again the following week to review each member’s Shiny prototype progress and consolidate the modules into a single deployable Shiny application.The meeting ended at 6:30pm.
 
-# 3 Project Meeting
+# 3 Project Meeting 3
 
 **Date:** 1-Apr-2026 (Wednesday)
 
@@ -132,8 +134,9 @@ title: "Meeting Minutes"
 -   Ricardo Moreno presented a draft layout for the project poster, which is required to be submitted in **A1 format** by 1 April 2026. Ricardo proposed organising the poster into five main sections: **Problem Statement, Motivation, Data & Approach, Key Findings, and Future Work**, arranged in a three-column layout with the project title across the full width at the top.
 
 -   The team reviewed the proposed layout and provided the following feedback:\
-    - Li Gen suggested that the **Problem Statement and Motivation** sections could be combined into a single column to save space, and that the resulting space should be used to display one or two representative visualisations from the Shiny application.\
-    - Bingqian noted that the **colour scheme** of the poster would follow the project’s established dark navy and teal palette, consistent with the homepage and Shiny app design.
+
+    -   Li Gen suggested that the **Problem Statement and Motivation** sections could be combined into a single column to save space, and that the resulting space should be used to display one or two representative visualisations from the Shiny application.\
+    -   Bingqian noted that the **colour scheme** of the poster would follow the project’s established dark navy and teal palette, consistent with the homepage and Shiny app design.
 
 -   Ricardo Moreno will take ownership of the poster design using the agreed layout. Bingqian will contribute the Module 1 visualisation snapshots, and Li Gen will provide the Module 2 content. Ricardo will integrate the Module 3 findings directly. The poster will be reviewed by all members before submission.
 

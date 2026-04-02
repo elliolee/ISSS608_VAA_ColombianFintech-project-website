@@ -6,6 +6,8 @@ date: "Published: March 18, 2026"
 format:
   html:
     number-sections: true
+    code-fold: true
+    code-summary: "Show code"
 
 execute:
   echo: true
@@ -13,60 +15,68 @@ execute:
   message: false
 ---
 
-# Motivation
 
-The rapid growth of fintech platforms has generated rich customer-level data spanning demographics, product adoption, digital behaviour, and service experience. Yet many business and product teams still rely on static spreadsheets or disconnected dashboards that fail to surface actionable insights.
+# Motivation and Core Question
 
-**COFINFAD** (*Colombian Fintech Financial Analytics Dataset*) provides a unique opportunity to bridge this gap. With **57 customer-level features**, covering demographics, transaction behaviour, satisfaction scores, NPS, churn probability, and customer lifetime value (CLV), this dataset is well-suited for an end-to-end interactive analytics application.
+The rapid growth of fintech platforms has generated rich customer-level data across demographics, product adoption, digital engagement, transaction behaviour, and service experience. However, many business and product teams still rely on static spreadsheets or disconnected dashboards that do not clearly show how these factors relate to retention risk and long-term customer value.
 
-This project proposes the development of a **Web-enabled Visual Analytics Application** using R Shiny that allows business users to:
+This project is built around one core analytical question:
 
--   Understand **who their customers are** across demographic and geographic dimensions
--   Examine **how customers engage** with the platform and experience its services
--   Identify **which customers are at risk of churning** and which generate the highest long-term value
--   Detect **high-value customers** with strong lifetime value potential
+> **How do customer structure, platform behaviour, and service experience relate to retention risk and customer lifetime value in a fintech platform?**
 
-The system follows a **progressive analytics workflow**, guiding users from broad customer population insights toward deeper behavioural analysis and retention risk assessment.
+Using the **COFINFAD (Colombian Fintech Financial Analytics Dataset)**, this project develops a **web-enabled visual analytics application** for fintech product, CRM, and business teams.
 
-------------------------------------------------------------------------
+The project follows a progressive analytical workflow:
 
-# Objectives
+**Customer Structure → Customer Engagement & Experience → Customer Retention & Business Value**
 
-The core objective of this project is to design and develop a **three-module visual analytics system** that answers key business questions about fintech customers.
+This storyline allows users to move from understanding who the customers are, to diagnosing how they engage with the platform and evaluate the service experience, and finally to identifying which customer groups matter most for retention and value creation.
 
-| Module | Key Questions |
-|------------------------------------|------------------------------------|
-| **Module 1: Customer Overview & Segmentation** | Who are our customers? Which segments and acquisition channels dominate the platform? |
-| **Module 2: Customer Engagement & Experience** | How active are customers? What drives satisfaction? What complaints arise? |
-| **Module 3: Retention Risk & Customer Value** | Which customers are at risk of churn? Which customers generate the highest lifetime value? |
 
-Together, the modules form a complete analytical workflow:
+# System Objectives
 
-```         
-Customer Structure
-       ↓
-Customer Engagement & Experience
-       ↓
-Customer Retention & Business Value
-```
+The objective of this project is to design and develop a **three-module visual analytics system** that supports data-driven decision-making for fintech business users.
 
-------------------------------------------------------------------------
+The system is designed to achieve four goals.
 
-# Data
+1. **Democratise analytics access**  
+   The application should allow non-technical business users to explore customer data through interactive visualisations rather than code or static reports.
+
+2. **Support a progressive analytical journey**  
+   The system should guide users from customer structure, to engagement and experience diagnosis, and finally to retention risk and customer value analysis.
+
+3. **Integrate analytics and visualisation**  
+   The application should combine descriptive analysis, comparative analysis, and predictive modelling with appropriate interactive visual outputs.
+
+4. **Support concrete business decisions**  
+   The system should help users identify customer segments, diagnose service and engagement patterns, and prioritise retention and growth strategies.
+
+The three analytical modules are summarised below.
+
+| Module | Objective |
+|------|------|
+| Module 1: Customer Overview & Segmentation | Understand the structure of the customer base through demographics, product adoption, behavioural differences, and geographic patterns. |
+| Module 2: Customer Engagement & Experience | Diagnose how customers interact with the platform, how experience relates to advocacy, and where service friction emerges. |
+| Module 3: Retention Risk & Customer Value | Identify higher-risk and higher-value customer groups through exploratory analysis and predictive modelling of customer lifetime value. |
+
+Together, these modules form one coherent visual analytics workflow rather than a collection of isolated charts.
+
+
+# Data Foundation
 
 ## Dataset Overview
 
-The primary dataset is the **COFINFAD Customer Dataset**, a single tabular file with **57 features** covering multiple analytical dimensions.
-
 ```{r}
-#| label: data-preview
 library(tidyverse)
 library(readxl)
 
 customer <- readxl::read_xlsx("../data/customer_data.xlsx")
+```
 
-cat(sprintf("Dataset: %d rows × %d columns\n", nrow(customer), ncol(customer)))
-col_map <- tribble(
+The project uses the **COFINFAD Customer Dataset**, which contains customer-level records spanning demographics, product ownership, transaction behaviour, digital engagement, satisfaction and feedback, churn probability, and customer lifetime value.
+
+```{r}
+col_map <- tibble::tribble(
   ~Variable,                    ~Category,
   "age",                        "Demographics",
   "gender",                     "Demographics",
@@ -123,135 +133,211 @@ col_map <- tribble(
   "churn_probability",          "Retention & Value",
   "customer_lifetime_value",    "Retention & Value",
   "clv_segment",                "Retention & Value",
-  "customer_tenure",            "Retention & Value")
+  "customer_tenure",            "Retention & Value"
+)
+
 col_map |>
   count(Category, name = "Feature Count") |>
   knitr::kable(caption = "Feature Distribution Across Analytical Dimensions")
 ```
 
 ```{r}
-#| label: data-glimpse
 customer |>
-  select(age, gender, customer_segment, income_bracket,
-         satisfaction_score, nps_score, churn_probability,
-         customer_lifetime_value, clv_segment) |>
+  select(
+    age, gender, customer_segment, income_bracket,
+    satisfaction_score, nps_score, churn_probability,
+    customer_lifetime_value, clv_segment
+  ) |>
   slice_head(n = 5) |>
-  knitr::kable(caption = "Sample Rows — Key Variables Across All Three Modules")
+  knitr::kable(caption = "Sample Rows of Key Variables")
 ```
 
-## Data Preparation Notes
+## Data Preparation Logic
 
-Before analysis, several data cleaning and validation steps will be performed:
+The project uses a shared cleaning framework, followed by module-specific transformations.
 
-1.  **Remove exact duplicate fields**: `first_tx` duplicates `first_transaction_date`; `last_tx` duplicates `last_transaction_date`. The more descriptive names will be retained.
+### Shared data preparation steps
 
-2.  **Audit overlapping transaction summary variables**: The pairs `avg_tx_value` & `average_transaction_value` and `total_tx_volume` & `total_transaction_volume` are redundant. One from each pair will be retained after validation.
+1. Remove duplicate or overlapping fields such as `first_tx` and `first_transaction_date`, and audit redundant transaction summary variables.
+2. Handle missing values according to variable meaning, for example recoding missing `complaint_topics` as `"None"` where appropriate.
+3. Convert date fields such as transaction dates and survey dates into proper `Date` format.
+4. Standardise categorical levels for demographic, behavioural, and feedback-related variables.
+5. Validate numeric ranges and perform consistency checks across related fields.
 
-3.  **Handle missing values** separately for:
+### Module-specific transformations
 
-    -   `complaint_topics` : likely missing when no complaint was filed, recode as `"None"`
-    -   `feature_requests` : treat NA as no request, recode as `"None"`
-    -   `credit_utilization_ratio` : impute or flag depending on credit card ownership
+- **Module 1** creates age groups, validates spatial coordinates, and constructs `active_products`.
+- **Module 2** creates feature usage and support ticket buckets, and recodes complaint-related missing values.
+- **Module 3** rescales customer lifetime value, creates age buckets, and prepares modelling datasets for training and testing.
 
-4.  **Convert date**: Columns (`first_transaction_date`, `last_transaction_date`, `last_survey_date`) will be converted to proper `Date` format using `lubridate`.
 
-5.  **Categorical standardisation**: Standardise categorical levels for demographic, feedback, and product-related variables using `forcats::fct_relevel()`.
-
-6.  **Outlier validation**: Validate continuous variables for outliers using IQR fencing for `churn_probability`, `customer_lifetime_value`, and transaction volume variables.
-
-7.  **Cross-field consistency checks**: Verify that `customer_tenure` aligns with `first_transaction_date`; confirm `active_products` count is consistent with binary product ownership columns.
-
-------------------------------------------------------------------------
-
-# Methodology
-
-The application uses a **layered visual analytics** approach, structured around three analytical modules. Each module is designed to answer progressively deeper questions about the customer base.
+# Module Architecture
 
 ## Module 1 — Customer Overview & Segmentation
 
+### Objective
+
+Module 1 serves as the **foundation layer** of the system. It introduces the customer base through demographic structure, product adoption, behavioural differences, and geographic usage patterns.
+
+### Analytical Methods
+
+The analytical methods used in Module 1 include:
+
+1. **Descriptive analytics** for customer profiles and distributions  
+2. **Grouped comparison analysis** across age groups, customer segments, and product categories  
+3. **Exploratory behavioural analysis** using transaction frequency and transaction value comparisons  
+4. **Geographic aggregation and clustering** to reveal city-level behavioural patterns  
+5. **Interactive tabular exploration** for customer-level inspection
+
+### Key visual outputs
+
 ```{r}
-#| label: tbl-module1-viz
-#| tbl-cap: "Module 1 – Proposed Visualisations"
 tibble::tribble(
-  ~Chart, ~Type, ~Key_Variables,
-  "Customer Segment Distribution by Age Group",
-  "Stacked Bar Chart",
-  "age_group, customer_segment",
-
-  "Transaction Frequency by Age & Segment",
-  "Boxplot",
-  "age_group, transaction_frequency, customer_segment",
-
-  "Transaction Frequency vs Value",
-  "Scatter Plot",
-  "transaction_frequency, average_transaction_value",
-
-  "Financial Product Adoption by Segment",
-  "Grouped Bar Chart",
-  "customer_segment, savings_account, credit_card, personal_loan, investment_account, insurance_product",
-
-  "Behaviour Heatmap Across Cities",
-  "Heatmap",
-  "city, transaction_frequency, avg_daily_transactions, average_transaction_value, app_logins_frequency, satisfaction_score, nps_score, churn_probability"
+  ~Chart, ~Type, ~Analytical_Method,
+  "Customer Explorer Table", "Interactive Table", "Interactive descriptive exploration",
+  "Customer Segment Distribution by Age Group", "Stacked Bar Chart", "Grouped comparison",
+  "Transaction Frequency by Age Group and Segment", "Boxplot", "Distribution comparison",
+  "Transaction Frequency vs Transaction Value", "Scatter Plot", "Behavioural relationship analysis",
+  "Financial Product Adoption by Segment", "Grouped Bar Chart", "Comparative adoption analysis",
+  "Behavioural Patterns Across Cities", "Heatmap", "Geographic clustering and pattern discovery"
 ) |>
-  knitr::kable(
-    align = "lcc")
+  knitr::kable(caption = "Module 1 Outputs and Analytical Methods")
 ```
 
-**Filters**: `customer_segment`, `gender`, `income_bracket`, `acquisition_channel`, `city`, `product`
+### Shiny UI components
 
-**Objective**: Provide a comprehensive overview of the customer population and identify key demographic and behavioural segments.
+The planned and tested Shiny UI components for Module 1 include:
 
-------------------------------------------------------------------------
+- `selectInput()` for customer segment, gender, income bracket, acquisition channel, and city
+- `checkboxGroupInput()` for product ownership filters
+- KPI cards for total customers, average active products, and dominant segment
+- `plotlyOutput()` for interactive charts
+- `DTOutput()` for the customer explorer table
+
+### Tested server-side logic
+
+The tested analytical and server-side logic for Module 1 includes:
+
+- reactive filtering of customer groups
+- grouped summarisation with `dplyr`
+- dynamic rendering of stacked bars, boxplots, scatter plots, and heatmaps
+- rendering of interactive customer tables
+- recalculation of KPIs under changing filters
+
 
 ## Module 2 — Customer Engagement & Experience
 
-```{r}
-#| label: tbl-module2-viz
-#| tbl-cap: "Module 2 — Proposed Visualisations"
+### Objective
 
+Module 2 serves as the **diagnostic bridge** between customer structure and business outcomes. It examines how customers interact with the platform, how experience translates into advocacy, and where service friction emerges.
+
+### Analytical Methods
+
+The analytical methods used in Module 2 include:
+
+1. **Comparative behavioural analysis** across product ownership groups  
+2. **Bucket-based diagnostic grouping** for feature usage and support burden  
+3. **Distribution comparison** using boxplots for NPS relationships  
+4. **Complaint frequency analysis** to understand issue composition  
+5. **KPI aggregation** for high-level monitoring  
+6. **Diagnostic relationship analysis** linking engagement, satisfaction, NPS, and support burden
+
+### Key visual outputs
+
+```{r}
 tibble::tribble(
-  ~Chart, ~Type, ~Key_Variables,
-  "App Login Frequency by Segment",  "Boxplot",      "app_logins_frequency, customer_segment",
-  "Satisfaction Score by Segment",   "Boxplot",      "satisfaction_score, customer_segment",
-  "Complaint Topics Distribution",   "Bar Chart",    "complaint_topics",
-  "Support Tickets vs Satisfaction", "Scatter Plot", "support_tickets_count, satisfaction_score"
+  ~Chart, ~Type, ~Analytical_Method,
+  "Average Feature Usage Diversity by Product Ownership", "Grouped Bar Chart", "Comparative behavioural analysis",
+  "Average App Login Frequency by Product Ownership", "Grouped Bar Chart", "Comparative behavioural analysis",
+  "NPS Score by Satisfaction Score", "Boxplot", "Distribution comparison",
+  "NPS Score by Feature Usage Diversity Bucket", "Boxplot", "Diagnostic relationship analysis",
+  "Complaint Topics Distribution", "Bar Chart", "Complaint frequency analysis",
+  "NPS Score by Support Ticket Bucket", "Boxplot", "Diagnostic relationship analysis",
+  "KPI Summary", "Summary Indicators", "KPI aggregation",
+  "Product-level Summary Tables", "Interactive Tables", "Grouped summarisation"
 ) |>
-  knitr::kable()
+  knitr::kable(caption = "Module 2 Outputs and Analytical Methods")
 ```
 
-**Filters**: `customer_segment`, `feedback_sentiment`, `complaint_topics`, `acquisition_channel`, `product`
+### Shiny UI components
 
-**Objective**: Analyse how customers interact with the platform and evaluate their service experience.
+The planned and tested Shiny UI components for Module 2 include:
 
-------------------------------------------------------------------------
+- `selectInput()` for customer segment, acquisition channel, feedback sentiment, complaint topics, support ticket bucket, and feature usage bucket
+- `checkboxGroupInput()` for product ownership
+- KPI cards for average satisfaction, average NPS, average support tickets, and average feature usage diversity
+- `plotlyOutput()` for comparative and diagnostic charts
+- `DTOutput()` for supporting product-level summary tables
+
+### Tested server-side logic
+
+The tested analytical and server-side logic for Module 2 includes:
+
+- reactive recoding and filtering of engagement and complaint variables
+- reactive bucket creation for support burden and feature usage
+- grouped summarisation by product ownership
+- dynamic rendering of bar charts and boxplots
+- recalculation of KPI cards and supporting summary tables under filters
+
 
 ## Module 3 — Retention Risk & Customer Value
 
-```{r}
-#| label: tbl-module3-viz
-#| tbl-cap: "Module 3 — Proposed Visualisations"
+### Objective
 
+Module 3 serves as the **prioritisation and modelling layer** of the system. It connects behavioural insight to retention and customer value outcomes through exploratory analysis and predictive modelling.
+
+### Analytical Methods
+
+The analytical methods used in Module 3 include:
+
+1. **Exploratory risk and value analysis** across customer groups  
+2. **Geographic value analysis** using city-level CLV aggregation  
+3. **Baseline predictive modelling** using Linear Regression  
+4. **Nonlinear predictive modelling** using Random Forest  
+5. **Model evaluation** through predicted-versus-actual comparison  
+6. **Variable importance analysis** for interpretation of model drivers
+
+### Key visual outputs
+
+```{r}
 tibble::tribble(
-  ~Chart, ~Type, ~Key_Variables,
-  "CLV by Customer Segment",      "Boxplot",      "customer_lifetime_value, customer_segment",
-  "Average Churn Probability by Segment", "Bar Chart", "churn_probability, customer_segment",
-  "CLV vs Transaction Frequency", "Scatter Plot", "customer_lifetime_value, transaction_frequency",
-  "Actual vs Predicted CLV",      "Scatter Plot", "customer_lifetime_value (actual), predicted_clv",
-  "Geographic CLV Map",           "Map",          "latitude, longitude, customer_lifetime_value"
+  ~Chart, ~Type, ~Analytical_Method,
+  "CLV Distribution by Customer Segment", "Boxplot", "Exploratory value analysis",
+  "Average Churn Probability by Segment", "Bar Chart", "Exploratory risk analysis",
+  "Transaction Frequency vs Customer Lifetime Value", "Scatter Plot", "Behaviour-value relationship analysis",
+  "Average Customer Lifetime Value by Location", "Geographic Map", "Geographic value analysis",
+  "Predicted vs Actual CLV (Linear Regression)", "Scatter Plot", "Baseline model evaluation",
+  "Variable Importance in Random Forest", "Bar Chart", "Variable importance analysis",
+  "Predicted vs Actual CLV (Random Forest)", "Scatter Plot", "Nonlinear model evaluation"
 ) |>
-  knitr::kable(
-    align = "lcc"
-  )
+  knitr::kable(caption = "Module 3 Outputs and Analytical Methods")
 ```
 
-**Filters**: `gender`, `income_bracket`, `occupation`, `age_group`
+### Shiny UI components
 
-**Objective**: Identify high-value customers and detect groups at higher churn risk.
+The planned and tested Shiny UI components for Module 3 include:
 
-------------------------------------------------------------------------
+- `selectInput()` for gender, income bracket, occupation, and age group
+- `sliderInput()` for churn-related filtering where needed
+- KPI cards for average churn probability, average CLV, and high-risk customer proportion
+- `plotlyOutput()` for model evaluation plots
+- map output for geographic CLV exploration
 
-# Prototype Sketches
+### Tested server-side logic
+
+The tested analytical and server-side logic for Module 3 includes:
+
+- filtering and aggregation of retention and value variables
+- CLV rescaling and age bucketing
+- train/test split preparation for predictive modelling
+- rendering of Linear Regression and Random Forest evaluation outputs
+- generation of predicted values and variable importance views
+- dynamic updating of risk/value summaries under filters
+
+
+# Early Shiny UI Storyboards
+
+The following hand-drawn sketches were used as early visual references for the Shiny user interface. They helped define the initial sidebar–main panel layout, KPI placement, and chart arrangement for each module.
 
 ## Module 1 — Customer Overview & Segmentation
 
@@ -265,102 +351,158 @@ tibble::tribble(
 
 ![](../images/module3.png)
 
-------------------------------------------------------------------------
+Although the final prototypes evolved beyond these early sketches, the drawings remain useful references for the original UI planning process and satisfy the requirement to include hand-drawn Shiny layout designs.
 
-# R Packages
-
-The following R packages are required for this project. All packages are available on CRAN.
+# R Packages and Technology Stack
 
 ```{r}
-#| label: packages-table
 tibble::tribble(
-  ~Package,        ~Purpose,
-  "tidyverse",     "Core data manipulation and transformation",
-  "readxl",        "Importing Excel data files",
-  "dplyr",         "Filtering, grouping, and aggregation",
-  "ggplot2",       "Static visualisation layer",
-  "plotly",        "Interactive charts (hover, zoom, filter)",
-  "forcats",       "Handling and reordering categorical variables",
-  "scales",        "Formatting axes with percentages and currency",
-  "ggdist",        "Distribution and uncertainty visualisation",
-  "patchwork",     "Composing multiple ggplot2 panels",
-  "lubridate",     "Parsing and transforming date columns",
-  "heatmaply",     "Interactive clustering heatmaps",
-  "viridis",       "Colour scales for heatmaps and continuous data",
-  "leaflet",       "Interactive geographic maps",
-  "cluster",       "Clustering algorithms for segmentation analysis",
-  "DT",            "Interactive data tables",
-  "shiny",         "Web application framework",
-  "shinydashboard","Dashboard layout and UI components",
-  "bslib",         "Modern Bootstrap themes for Shiny UI"
-) |>
-  knitr::kable(caption = "Required R Packages")
+  ~Package, ~Purpose,
+  "tidyverse", "Data manipulation",
+  "ggplot2", "Visualisation",
+  "plotly", "Interactive charts",
+  "DT", "Interactive tables",
+  "leaflet", "Geographic maps",
+  "heatmaply", "Clustering heatmaps",
+  "randomForest", "Predictive modelling",
+  "shiny", "Web application framework",
+  "bslib", "UI styling"
+)
 ```
 
-------------------------------------------------------------------------
 
-# Project Schedule
+# Scope of Work
+
+## Task Allocation
 
 ```{r}
-#| label: schedule-gantt
-#| fig-width: 10
-#| fig-height: 5
+scope_work <- tibble::tribble(
+  ~Task, ~Owner, ~Reviewer_Moderator,
+  "Proposal first draft and proposal page revision", "Li Gen", "Bingqian",
+  "Meeting minutes maintenance", "Bingqian", "Team",
+  "Homepage design and optimisation", "Bingqian", "Li Gen",
+  "Overall website framework and deployment", "Li Gen", "Ricardo",
+  "Module 1 prototype and write-up", "Bingqian", "Li Gen",
+  "Module 2 prototype and write-up", "Li Gen", "Ricardo",
+  "Module 3 prototype and write-up", "Ricardo", "Bingqian",
+  "Poster design and preparation", "Ricardo", "Team",
+  "User guide consolidation", "Li Gen", "Team",
+  "Final integration and quality assurance", "Li Gen", "Team"
+)
 
+knitr::kable(
+  scope_work,
+  caption = "Scope of Work: Task Allocation by Owner and Reviewer/Moderator"
+)
+```
+
+## Gantt Chart
+
+```{r}
 library(tidyverse)
 library(lubridate)
-proposal_deadline <- ymd("2026-03-18")
-schedule <- tribble(
-  ~task, ~start, ~end,
-  "Project Proposal", "2026-03-01", "2026-03-18",
-  "Data Cleaning & EDA", "2026-03-01", "2026-03-10",
-  "Module 1 Prototype", "2026-03-18", "2026-03-23",
-  "Module 2 Prototype", "2026-03-18", "2026-03-23",
-  "Module 3 Prototype", "2026-03-18", "2026-03-23",
-  "Shiny App Development", "2026-03-23", "2026-03-30",
-  "Project Website (Quarto)", "2026-03-25", "2026-03-31",
-  "Poster Preparation", "2026-03-30", "2026-04-04",
-  "User Guide", "2026-04-02", "2026-04-04",
-  "Final Submission", "2026-04-05", "2026-04-05")
-schedule <- schedule %>%
+
+scope_schedule <- tibble::tribble(
+  ~task, ~start, ~end, ~owner,
+  "Proposal first draft and proposal page revision", "2026-03-11", "2026-03-18", "Li Gen",
+  "Meeting minutes maintenance",                     "2026-03-11", "2026-04-03", "Bingqian",
+  "Homepage design and optimisation",               "2026-03-29", "2026-04-03", "Bingqian",
+  "Overall website framework and deployment",       "2026-03-29", "2026-04-03", "Li Gen",
+  "Module 1 prototype and write-up",                "2026-03-18", "2026-04-03", "Bingqian",
+  "Module 2 prototype and write-up",                "2026-03-18", "2026-04-03", "Li Gen",
+  "Module 3 prototype and write-up",                "2026-03-18", "2026-04-03", "Ricardo",
+  "Poster design and preparation",                  "2026-03-29", "2026-04-01", "Ricardo",
+  "User guide consolidation",                       "2026-04-01", "2026-04-03", "Li Gen",
+  "Final integration and quality assurance",        "2026-04-01", "2026-04-03", "Li Gen"
+) |>
   mutate(
     start = ymd(start),
     end = ymd(end),
-    status = ifelse(end <= proposal_deadline,
-                    "Completed",
-                    "To be done"),
     task = factor(task, levels = rev(task))
   )
 
-ggplot(schedule) +
+owner_palette <- c(
+  "Bingqian" = "#7BAFD4",
+  "Li Gen"   = "#4CB782",
+  "Ricardo"  = "#F0A35E"
+)
+
+ggplot(scope_schedule) +
   geom_segment(
-    aes(x = start,
-        xend = end,
-        y = task,
-        yend = task,
-        colour = status),
-    linewidth = 8
+    aes(
+      x = start,
+      xend = end,
+      y = task,
+      yend = task,
+      colour = owner
+    ),
+    linewidth = 8,
+    lineend = "round"
   ) +
-  scale_colour_manual(
-    values = c(
-      "Completed" = "#9BD3E8",
-      "To be done" = "#F4A6B0")) +
- scale_x_date(
+  geom_point(
+    aes(x = start, y = task, colour = owner),
+    size = 2.6
+  ) +
+  geom_point(
+    aes(x = end, y = task, colour = owner),
+    size = 2.6
+  ) +
+  scale_colour_manual(values = owner_palette) +
+  scale_x_date(
     date_breaks = "1 week",
-    date_labels = "%b %d") +
- labs(
-    title = "Project Timeline",
+    date_labels = "%b %d",
+    limits = c(ymd("2026-03-10"), ymd("2026-04-05")),
+    expand = expansion(mult = c(0.01, 0.02))
+  ) +
+  labs(
+    title = "Scope of Work Timeline",
+    subtitle = "Tasks and owners recorded across the project development period",
     x = "Date",
-    y = "",
-    colour = "") +
- theme_minimal(base_size = 13) +
+    y = NULL,
+    colour = "Owner"
+  ) +
+  theme_minimal(base_size = 12) +
   theme(
     legend.position = "top",
-    panel.grid.minor = element_blank())
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_blank(),
+    axis.text.y = element_text(size = 10),
+    plot.title = element_text(face = "bold", size = 16),
+    plot.subtitle = element_text(size = 11, colour = "#4A5568"),
+    legend.title = element_text(face = "bold")
+  )
 ```
 
-| Milestone                   | Deadline               |
-|-----------------------------|------------------------|
-| Project Proposal on Netlify | 18 March 2026, 11:59pm |
-| Poster Submission           | 1 April 2026, 11:59pm  |
-| Poster Presentation         | 4 April 2026           |
-| Final Submission            | 5 April 2026, 11:59pm  |
+The scope of work summarises the division of responsibilities recorded across the project meetings from **11 March 2026 to 3 April 2026**. Each task is assigned a primary owner, while the reviewer/moderator information is provided in the task allocation table above to support coordination, feedback, and final integration across modules and deliverables.
+
+
+# Project Milestones
+
+```{r}
+milestones <- tibble::tribble(
+  ~Milestone, ~Deadline,
+  "Project Proposal on Netlify", "18 March 2026, 11:59pm",
+  "Poster Submission", "1 April 2026, 11:59pm",
+  "Poster Presentation", "4 April 2026",
+  "Final Submission", "5 April 2026, 11:59pm"
+)
+
+knitr::kable(
+  milestones,
+  caption = "Project Milestones"
+)
+```
+
+These milestones define the formal course deadlines for the proposal, poster, presentation, and final submission of the Shiny application and project website.
+
+
+# Conclusion
+
+This project proposes a **three-module visual analytics system** that integrates customer segmentation, behavioural diagnosis, and customer value analysis into a single Shiny application.
+
+The system is designed to help fintech product and CRM teams move through a coherent analytical journey:
+- from understanding customer structure,
+- to diagnosing engagement and service experience,
+- and finally to prioritising retention and customer value.
+
+By combining **interactive visualisation**, **analytical methods**, and **tested Shiny design logic**, the application functions as more than a dashboard. It serves as a practical **decision-support system** for exploring customer patterns, explaining business outcomes, and supporting targeted retention and growth strategies.
