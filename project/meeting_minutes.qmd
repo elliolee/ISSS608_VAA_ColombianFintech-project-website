@@ -2,6 +2,158 @@
 title: "Meeting Minutes"
 ---
 
-# Meeting Minutes
+# 1 Project Meeting 1
 
-This page will document project meetings, decisions, and action items.
+**Date:** 11-Mar-2026 (Wednesday)
+
+**Time:** 4:00pm – 5:00pm
+
+**Attendees:** Ricardo Moreno, Li Gen, Huang Bingqian
+
+## **1.1 Topic Selection and Initial Dataset Exploration**
+
+-   Ricardo shared that he had explored several datasets that could potentially be used for the group project and introduced the **COFINFAD (Colombian Fintech Financial Analytics Dataset)** provided by the professor. Ricardo explained that the dataset contains information on customer demographics, financial attributes, product usage, and behavioural indicators, which can support multiple customer analytics tasks.
+
+-   Li Gen reviewed the dataset structure and noted that the dataset contains two components: **a customer dataset and a transaction dataset**, with the customer dataset containing around 54 variables suitable for analysis. But the transaction dataset was very large, which may increase the difficulty of analysis and implementation. And also pointed out that the transaction dataset only covers one year of data, which limits its usefulness for long-term trend analysis.
+
+-   Bingqian asked whether the transaction dataset might still be useful for analysing transaction behaviour over time. After discussion, the team decided to first focus on the **customer dataset** for the initial project development, since it was relatively clean and contained sufficient variables which allowed the team to concentrate on building meaningful customer insights rather than spending excessive time on heavy data processing since transaction type was not main focus.
+
+## **1.2 Data Cleaning and Preparation**
+
+-   Li Gen suggested that the team should review the data quality of the customer dataset, including **checking missing values, validating variable ranges, and standardising categorical variables and duplicate records**.
+
+-   Ricardo thought that the location information in the dataset is currently difficult to use directly for analysis and suggested converting **the location variables into latitude and longitude coordinates** so that they can be used for geographic visualisations.
+
+-   Bingqian agreed that transforming the location data would allow the team to create maps and spatial visualisations in the future dashboard. Also noted that date-related variables should be converted into proper date formats so that they can be used for further analysis.
+
+## **1.3 Project Plan and Analytical Storyline**
+
+-   Ricardo shared several possible analytical topics that the group could explore, including financial inclusion, customer lifetime value (CLV), churn analysis, customer satisfaction, cross-selling opportunities, and digital engagement behaviour.
+
+-   Bingqian suggested that the project could be structured around customer analytics to create a clear and logical storyline, such as geographic adoption, user transaction behavior, customer segmentation and churn risk.
+
+-   Li Gen proposed organising the analysis intothree analytical modules so that each member could focus on a different analytical component:\
+    **Module 1: Customer Overview / Segmentation\
+    **Understanding who the customers are and how they are distributed across demographic and product categories.\
+    **Module 2: Customer Engagement and Experience\
+    **Exploring how customers interact with the platform and analysing satisfaction and service issues.\
+    **Module 3: Retention Risk and Customer Value\
+    **Identifying high-value customers and customers with higher churn risk.
+
+-   The team agreed that these modules form a progressive analytical workflow, starting from customer structure, moving to engagement behaviour, and ending with retention and business value insights.
+
+## **1.4 Task Allocation**
+
+-   Ricardo volunteered to handle the location-related data cleaning, including converting location values into latitude and longitude coordinates and work on Module 3: Retention Risk and Customer Value, focusing on churn probability and customer lifetime value.
+
+-   Li Gen will work on Module 2: Customer Engagement and Experience and assist with checking missing values and duplicate records, focusing on analysing engagement behaviour and satisfaction indicators.
+
+-   Bingqian will focus on Module 1: Customer Overview / Segmentation, analysing customer demographics, acquisition channels, and product adoption patterns.
+
+## **1.5 Next Steps**
+
+-   Li Gen will prepare the first draft of the project proposal, outlining the overall storyline, dataset description, and module structure.
+
+-   Ricardo will continue reviewing the dataset and start working on data preparation tasks, particularly checking data quality and preparing variables for analysis.
+
+-   Bingqian will begin exploring possible visualisation ideas for the Customer Engagement & Experience module and document the meeting minutes.
+
+-   The team agreed to review the first draft proposal together and refine the analytical storyline before the submission deadline.
+
+-   The meeting ended at 5:00pm.
+
+# 2 Project Meeting 2
+
+**Date:** 29-Mar-2026 (Sunday)
+
+**Time:** 5:00pm – 6:30pm
+
+**Attendees:** Ricardo Moreno, Li Gen, Huang Bingqian
+
+## **2.1 Project Website Skeleton and Module Ownership Assignment**
+
+-   Li Gen presented the overall project website architecture built on **Quarto**, demonstrating the folder structure, navigation layout, and placeholder pages created for all three modules. Li Gen explained that the website skeleton includes a Home page, a Project section (Proposal and Storyboard), a Modules section (Module 1, 2, and 3), as well as Poster, User Guide, and Shiny App pages.
+
+-   Li Gen also confirmed that the **Shiny application** skeleton has been set up on the project GitHub repository with a multi-tab layout that will house all three analytical modules. The app will be deployed on shinyapps.io upon completion.
+
+-   The team reviewed the module ownership and agreed on the following division of work for the Shiny application and website:\
+    **Li Gen**: responsible for building the project website skeleton, setting up GitHub repository structure, managing deployment to Netlify, and developing **Module 2: Customer Engagement & Experience** in the Shiny app.\
+    **Huang Bingqian**: responsible for the **Homepage design and optimisation** of the project website, and developing **Module 1: Customer Overview & Segmentation** in the Shiny app.\
+    **Ricardo Moreno**: responsible for the **project poster** design and developing **Module 3: Retention Risk & Customer Value** in the Shiny app.
+
+-   The team discussed the importance of maintaining a consistent visual theme across the website and Shiny application. Bingqian shared the current homepage design, which features the Bogotá cityscape as the hero background with a dark teal colour scheme. The team agreed to use this as the style reference for all other pages.
+
+## **2.2 Predictive Modelling and Dataset Performance Challenges**
+
+-   Ricardo raised a concern regarding the performance of predictive modelling in **Module 3**. When running the full customer dataset of 48,723 records with machine learning models such as Random Forest, the computation time was significantly long and caused the R session to become unresponsive in some cases.
+
+-   The team discussed possible approaches to address this issue:\
+    - Reduce the dataset size by applying **random sampling** (e.g., 10,000 to 15,000 records) for model training and evaluation within the Shiny app, while using the full dataset for descriptive visualisations.\
+    - Switch to a **lighter model** such as logistic regression or decision tree for the Shiny prototype, and reserve more complex models for the report write-up only.\
+    - Pre-compute model outputs and **cache the results** as RDS files so that the Shiny app loads stored results rather than rerunning the model each time.
+
+-   After discussion, the team reached a **consensus** that Ricardo will implement a combination of random sampling and result caching for the Shiny prototype. The full model results will be documented and discussed in the module write-up report rather than computed live in the app.
+
+-   Bingqian noted a similar issue in Module 1, where the city-level behavioural heatmap using **heatmaply** took a noticeable amount of time to render when all cities were included. The team agreed to limit the heatmap to the top 30 cities by customer count to improve responsiveness.
+
+## **2.3 GitHub Collaboration Issues and Resolution**
+
+-   The team encountered several issues during GitHub collaboration in the early development phase:\
+    **- Merge conflicts**: Li Gen and Bingqian both made changes to the **\_quarto.yml** configuration file simultaneously, resulting in merge conflicts when pushing to the main branch. The conflict was resolved by manually reviewing the differences and merging both sets of changes.\
+    **- Large file push failure**: Bingqian encountered a push rejection because the **.RDataTmp** temporary file  was accidentally included in a commit, exceeding GitHub’s 100 MB file size limit. This was resolved by removing the file from the Git history using **git filter-branch** and adding .RDataTmp to the **.gitignore** file.\
+    **- Branch management**: The team had initially been working directly on the **main branch**, which caused issues when multiple members pushed changes at the same time. Li Gen suggested that each member work on their own **feature branch** and create pull requests to merge into main, to reduce the risk of conflicts going forward.
+
+-   The team agreed to adopt the following GitHub workflow going forward:\
+    - Each member works on a dedicated branch.\
+    - Pull requests are reviewed by at least one other team member before merging into main.\
+    - The **.gitignore** file will be updated to exclude temporary R files (.RData, .RDataTmp, .Rhistory) and large data files.
+
+-   Li Gen will update the **.gitignore** and push the updated file to the main branch, and will also update the **\_quarto.yml** render list to exclude the **module_retention.rmarkdown** legacy file to prevent rendering errors.
+
+## **2.4 Task Allocation and Next Steps**
+
+-   The following action items were agreed upon for the next phase:\
+    **- Li Gen**: Complete Module 2 Shiny prototype (engagement and satisfaction visualisations), update .gitignore, resolve \_quarto.yml rendering issues, and ensure Netlify deployment is functional.\
+    **- Huang Bingqian**: Finalise Module 1 Shiny prototype (customer overview and segmentation), complete homepage optimisation, and submit the report on Quarto.\
+    **- Ricardo Moreno**: Implement Module 3 Shiny prototype with caching and sampling, design the poster template layout, and document the data preparation process for Module 3.
+
+-   The team agreed to meet again the following week to review each member’s Shiny prototype progress and consolidate the modules into a single deployable Shiny application.The meeting ended at 6:30pm.
+
+# 3 Project Meeting
+
+**Date:** 1-Apr-2026 (Wednesday)
+
+**Time:** 3:00pm – 4:30pm
+
+**Attendees:** Ricardo Moreno, Li Gen, Huang Bingqian
+
+## **3.1 Poster Layout, Format, and Content Planning**
+
+-   Ricardo Moreno presented a draft layout for the project poster, which is required to be submitted in **A1 format** by 1 April 2026. Ricardo proposed organising the poster into five main sections: **Problem Statement, Motivation, Data & Approach, Key Findings, and Future Work**, arranged in a three-column layout with the project title across the full width at the top.
+
+-   The team reviewed the proposed layout and provided the following feedback:\
+    - Li Gen suggested that the **Problem Statement and Motivation** sections could be combined into a single column to save space, and that the resulting space should be used to display one or two representative visualisations from the Shiny application.\
+    - Bingqian noted that the **colour scheme** of the poster would follow the project’s established dark navy and teal palette, consistent with the homepage and Shiny app design.
+
+-   Ricardo Moreno will take ownership of the poster design using the agreed layout. Bingqian will contribute the Module 1 visualisation snapshots, and Li Gen will provide the Module 2 content. Ricardo will integrate the Module 3 findings directly. The poster will be reviewed by all members before submission.
+
+## **3.2 User Guide Format and Structure**
+
+-   Bingqian shared a reference example from a prior group project that structured the User Guide as a **slide-based document**, where each slide contains an annotated screenshot of the interface with numbered callouts and a description box explaining the functions of each UI element.
+
+-   The team discussed two possible formats for the User Guide:\
+    **- Option A — PowerPoint slide deck:** Each slide covers one screen or tab. Screenshots are annotated with numbered labels and a side panel explains each element. This format is visually clear and easy for new users to follow.\
+    **- Option B — Quarto HTML document:** A scrollable web page with embedded screenshots, step-by-step instructions, and in-line annotations. This format integrates directly with the project website.
+
+-   After discussion, the team agreed to produce the User Guide as a **slide document** with screenshot annotations following the same style as the slide-based reference. This would ensure the User Guide is accessible online and consistent with the rest of the website.
+
+-   The division of labour for the User Guide was agreed as follows: each member is responsible for writing the guide section corresponding to their own module. Bingqian will draft Module 1, Li Gen will draft Module 2, and Ricardo Moreno will draft Module 3. Bingqian will also write the Overview section given prior experience with the homepage design. Li Gen will consolidate all sections into a single Quarto document and ensure consistent formatting.
+
+## **3.3 Final Submission Checklist and Next Steps**
+
+-   The team reviewed the final submission requirements and agreed on the following action items:\
+    **- Ricardo Moreno:** Finalise poster design and submit by 1 April 2026. Complete Module 3 Quarto and Shiny prototype.\
+    **- Li Gen:** Complete Module 2 Shiny prototype and Quarto. Consolidate User Guide into a single Quarto page and publish on the project website.\
+    **- Bingqian:** Add analytical interpretation paragraphs to Module 1. Draft User Guide. Document and upload these meeting minutes.
+
+-   The team agreed to conduct a final review meeting before the poster presentation to test the complete Shiny application and verify that all website pages are correctly rendered and accessible.The meeting ended at 4:30pm
