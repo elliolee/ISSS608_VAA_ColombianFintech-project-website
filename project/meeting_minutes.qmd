@@ -2,7 +2,7 @@
 title: "Meeting Minutes"
 ---
 
-# 1 Project Meeting 1
+# Project Meeting 1
 
 **Date:** 11-Mar-2026 (Wednesday)
 
@@ -62,7 +62,7 @@ title: "Meeting Minutes"
 
 -   The meeting ended at 5:00pm.
 
-# 2 Project Meeting 2
+# Project Meeting 2
 
 **Date:** 29-Mar-2026 (Sunday)
 
@@ -121,7 +121,7 @@ title: "Meeting Minutes"
 
 -   The team agreed to meet again the following week to review each member’s Shiny prototype progress and consolidate the modules into a single deployable Shiny application.The meeting ended at 6:30pm.
 
-# 3 Project Meeting 3
+# Project Meeting 3
 
 **Date:** 1-Apr-2026 (Wednesday)
 
