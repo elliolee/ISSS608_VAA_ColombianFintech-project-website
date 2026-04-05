@@ -2,6 +2,10 @@
 title: "Retention Risk & Customer Value"
 ---
 
+# Retention Risk & Predictive CLV Modelling
+
+This page will contain the prototype, analysis, and findings for Module 3.
+
 # **1. Introduction**
 
 ## 1.1. Project Background
@@ -12,7 +16,7 @@ Fintech companies operate in highly competitive digital markets where customer e
 
 Any business requires significant marketing and operational costs when it wants to attract new customers. Retaining existing customers proves to be more cost-effective and provide more value for extended periods.
 
-Customers who remain active on a fintech platform tend to perform more financial transactions, adopt multiple financial products, and contribute higher customer lifetime value (CLV). In contrast, customers who show declining engagement or dissatisfaction may be more likely to discontinue their use of the platform.
+Customers who remain active on a fintech platform tend to perform more financial transactions, adopt multiple financial products, and contribute higher Customer Lifetime Value (CLV). In contrast, customers who show declining engagement or dissatisfaction may be more likely to discontinue their use of the platform.
 
 Identifying customers with high churn risk allows fintech companies to implement specific strategies for retaining those customers. Organizations also need to track which customers produce the most value because this information allows them to distribute resources toward their most profitable customer groups.
 
@@ -30,7 +34,7 @@ This module adopts an **Exploratory Modelling methodology**. It focuses on explo
 
 The analytical workflow begins with data preparation and transformation, where relevant variables are cleaned, standardized, and organized into meaningful groups such as demographic attributes, transactional behavior, engagement indicators, and financial outcomes. This step ensures that the dataset is suitable for both visual exploration and predictive modelling.
 
-Following data preparation, exploratory modelling techniques are applied to investigate patterns and relationships between variables. Initial visualizations are used to explore churn probability across **customer segments**, allowing the identification of groups that may be at higher risk of leaving the platform. While churn exploration provides valuable contextual insights, the primary analytical focus of this module is the development of a **predictive model for Customer Lifetime Value (CLV)**.
+Following data preparation, exploratory modelling techniques are applied to investigate patterns and relationships between variables. Initial visualizations are used to explore churn probability across **c**ustomer segments, allowing the identification of groups that may be at higher risk of leaving the platform. While churn exploration provides valuable contextual insights, the primary analytical focus of this module is the development of a **predictive model for Customer Lifetime Value (CLV)**.
 
 A machine learning predictive modelling approach is implemented to estimate CLV using behavioral, and transactional variables. This model supports the identification of key drivers of customer value and enables comparison between predicted and observed CLV values. The results are visualized through interactive charts that allow users to evaluate model performance and explore how customer characteristics influence financial value.
 
@@ -78,7 +82,7 @@ The analysis uses the **COFINFAD** (Colombian Fintech Financial Analytics) datas
 The dataset contains approximately 48,000 customer records and more than 50 variables, providing a comprehensive view of customer behavior within a fintech platform.
 
 ```{r}
-fintech <- readxl::read_xlsx("../data/customer_data.xlsx")
+fintech <- read_xlsx("../data/customer_data.xlsx")
 ```
 
 ## 2.3. Variable Grouping
@@ -236,13 +240,17 @@ The primary objective is to identify meaningful predictors and behavioral patter
 With this visualization we aim to explore how Customer Lifetime Value varies across different customer segments to identify patterns in customer profitability. By examining the distribution of CLV using a logarithmic scale (CLV values are highly skewed), the analysis highlights differences in financial contribution between segments.
 
 ```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show the code"
+
 ggplot(fintech_clean, 
        aes(x = customer_segment, 
            y = clv_millions,
            fill = customer_segment)) +
   
   geom_boxplot(
-    alpha = 0.8,
+    alpha = 0.85,
     outlier.alpha = 0.3,
     width = 0.6
   ) +
@@ -253,11 +261,17 @@ ggplot(fintech_clean,
     geom = "point",
     shape = 18,
     size = 3,
-    color = "darkblue"
+    color = "#004d40"   # Dark teal
   ) +
   
-  scale_fill_brewer(
-    palette = "Blues",
+  # Custom teal palette
+  scale_fill_manual(
+    values = c(
+      "inactive"   = "#b2dfdb",
+      "occasional" = "#80cbc4",
+      "regular"    = "#26a69a",
+      "power"      = "#00695c"
+    ),
     guide = "none"
   ) +
   
@@ -290,39 +304,65 @@ These findings highlight the importance of prioritizing higher engagement segmen
 We want to explore differences in churn probability across customer segments. By comparing segments, the analysis provides insight into which groups may require targeted retention strategies.
 
 ```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show the code"
+
 churn_by_segment <- fintech_clean %>%
   group_by(customer_segment) %>%
-  summarise(avg_churn = mean(churn_probability, na.rm = TRUE), .groups = "drop") %>%
+  summarise(
+    avg_churn = mean(churn_probability, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
   arrange(desc(avg_churn)) %>%
-  mutate(customer_segment = factor(customer_segment, levels = customer_segment))
+  mutate(
+    customer_segment = factor(
+      customer_segment,
+      levels = customer_segment
+    )
+  )
 
-ggplot(churn_by_segment, aes(x = customer_segment, y = avg_churn, fill = avg_churn)) +
+ggplot(churn_by_segment, 
+       aes(x = customer_segment, 
+           y = avg_churn, 
+           fill = avg_churn)) +
+  
   geom_col(width = 0.7) +
+  
   geom_text(
     aes(label = label_percent(accuracy = 0.1)(avg_churn)),
     vjust = -0.4,
     size = 4,
     fontface = "bold",
-    color = "#08306b"
+    color = "#004d40"   # Dark teal
   ) +
+  
+  # Teal gradient palette
   scale_fill_gradient(
-    low = "#c6dbef",
-    high = "#08306b",
+    low = "#b2dfdb",    # Light teal
+    high = "#00695c",   # Dark teal
     guide = "none"
   ) +
+  
   scale_y_continuous(
     labels = label_percent(),
     breaks = seq(0.30, 0.35, 0.01),
     expand = expansion(mult = c(0, 0.08))
   ) +
-  coord_cartesian(ylim = c(0.30, 0.35)) +
+  
+  coord_cartesian(
+    ylim = c(0.30, 0.35)
+  ) +
+  
   labs(
     title = "Average Churn Probability by Customer Segment",
     subtitle = "Segments ranked from highest to lowest churn risk",
     x = "Customer Segment",
     y = "Average Churn Probability"
   ) +
+  
   theme_minimal(base_size = 13) +
+  
   theme(
     plot.title = element_text(face = "bold"),
     plot.subtitle = element_text(color = "gray40"),
@@ -341,6 +381,10 @@ This suggests that churn risk alone may not strongly differentiate segments, hig
 Understanding the relationship between transaction frequency and Customer Lifetime Value is essential for identifying behavioral indicators that may serve as strong predictors in the development of the predictive model.
 
 ```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show the code"
+
 x_limit <- quantile(fintech_clean$transaction_frequency, 0.95)
 y_limit <- quantile(fintech_clean$clv_millions, 0.95)
 
@@ -361,8 +405,14 @@ ggplot(fintech_clean,
     alpha = 0.6
   ) +
   
-  scale_color_brewer(
-    palette = "Blues"
+  # Custom teal palette for segments
+  scale_color_manual(
+    values = c(
+      "inactive"   = "#b2dfdb",
+      "occasional" = "#80cbc4",
+      "regular"    = "#26a69a",
+      "power"      = "#00695c"
+    )
   ) +
   
   scale_y_continuous(
@@ -427,11 +477,17 @@ colombia_map <- map_data("world", region = "Colombia")
 ```
 
 ```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show the code"
+#| warning: false
+
 map_plot <- ggplot() +
+  
   geom_polygon(
     data = colombia_map,
     aes(x = long, y = lat, group = group),
-    fill = "#f7fbff",
+    fill = "#e0f2f1",
     color = "gray80",
     linewidth = 0.3
   ) +
@@ -455,16 +511,20 @@ map_plot <- ggplot() +
   
   geom_text(
     data = top_cities,
-    aes(x = longitude, y = latitude, label = label),
+    aes(
+      x = longitude,
+      y = latitude,
+      label = label
+    ),
     size = 3,
     fontface = "bold",
-    color = "#08306b",
+    color = "#004d40",
     vjust = -0.8
   ) +
   
   scale_color_gradient(
-    low = "#9ecae1",
-    high = "#08306b",
+    low = "#b2dfdb",
+    high = "#00695c",
     labels = comma
   ) +
   
@@ -479,7 +539,7 @@ map_plot <- ggplot() +
   
   labs(
     title = "Average Customer Lifetime Value by Location",
-    subtitle = "Bubble size represents number of customers; labels show top 5 cities by average CLV",
+    subtitle = "Bubble size represents number of customers; labels show top cities by average CLV",
     x = "Longitude",
     y = "Latitude",
     color = "Average CLV\n(Millions)",
@@ -487,7 +547,6 @@ map_plot <- ggplot() +
   ) +
   
   theme_minimal(base_size = 13) +
-  
   theme(
     plot.title = element_text(face = "bold"),
     plot.subtitle = element_text(color = "gray40"),
@@ -498,7 +557,9 @@ map_plot <- ggplot() +
     panel.grid.major = element_blank()
   )
 
-ggplotly(map_plot, tooltip = "text")
+suppressWarnings(
+  ggplotly(map_plot, tooltip = "text")
+)
 ```
 
 The results reveal that the largest cities in Colombia (Bogotá and Medellín), are not necessarily the locations with the highest average CLV. Instead, several smaller cities exhibit higher value customer concentrations.
@@ -534,12 +595,14 @@ Once the variables were defined, the model was fitted using the cleaned dataset 
 The model served as a baseline predictive method, allowing for the interpretation of coefficient estimates and the assessment of how individual predictors contribute to customer value.
 
 ```{r}
-# Generate predictions
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show the code"
+
 fintech_clean$predicted_clv <- predict(clv_model)
 
-# Define zoom limits (95th percentile)
-x_limit <- quantile(fintech_clean$predicted_clv, 0.95)
-y_limit <- quantile(fintech_clean$clv_millions, 0.95)
+x_limit <- quantile(fintech_clean$predicted_clv, 0.95, na.rm = TRUE)
+y_limit <- quantile(fintech_clean$clv_millions, 0.95, na.rm = TRUE)
 
 ggplot(fintech_clean,
        aes(x = predicted_clv,
@@ -547,22 +610,21 @@ ggplot(fintech_clean,
            color = clv_millions)) +
   
   geom_point(
-    alpha = 0.4,
+    alpha = 0.45,
     size = 2
   ) +
   
-  # Perfect prediction reference line
   geom_abline(
     slope = 1,
     intercept = 0,
-    color = "#08306b",
+    color = "#004d40",   # Dark teal
     linewidth = 1,
     linetype = "dashed"
   ) +
   
   scale_color_gradient(
-    low = "#9ecae1",
-    high = "#08306b",
+    low = "#b2dfdb",     # Light teal
+    high = "#00695c",    # Dark teal
     labels = comma
   ) +
   
@@ -698,6 +760,10 @@ rf_model <- randomForest(
 The results of the Random Forest model were first examined to evaluate its structure and overall performance characteristics.
 
 ```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show the code"
+
 rf_summary <- data.frame(
   Metric = c(
     "Number of Trees",
@@ -723,10 +789,12 @@ To better understand the contribution of each predictor to the Random Forest mod
 
 ```{r}
 
-# Extract importance values from the fitted model
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show the code"
+
 importance_matrix <- randomForest::importance(rf_model)
 
-# Select available importance metric
 importance_values <- if ("%IncMSE" %in% colnames(importance_matrix)) {
   importance_matrix[, "%IncMSE"]
 } else if ("IncNodePurity" %in% colnames(importance_matrix)) {
@@ -735,13 +803,11 @@ importance_values <- if ("%IncMSE" %in% colnames(importance_matrix)) {
   importance_matrix[, 1]
 }
 
-# Create dataframe
 importance_df <- data.frame(
   Variable = rownames(importance_matrix),
   Importance = importance_values
 )
 
-# Convert to relative importance (%)
 importance_df <- importance_df %>%
   mutate(
     Importance_Scaled = Importance / max(Importance)
@@ -751,7 +817,6 @@ importance_df <- importance_df %>%
     Variable = factor(Variable, levels = Variable)
   )
 
-# Plot variable importance
 ggplot(
   importance_df,
   aes(
@@ -760,27 +825,39 @@ ggplot(
     fill = Importance_Scaled
   )
 ) +
-  geom_col(width = 0.7) +
+  
+  geom_col(
+    width = 0.7,
+    alpha = 0.9
+  ) +
+  
   coord_flip() +
+  
   scale_fill_gradient(
-    low = "#c6dbef",
-    high = "#08306b",
+    low = "#b2dfdb",   # Light teal
+    high = "#00695c",  # Dark teal
     guide = "none"
   ) +
+  
   scale_y_continuous(
-    labels = percent_format()
+    labels = percent_format(),
+    expand = expansion(mult = c(0, 0.05))
   ) +
+  
   labs(
     title = "Variable Importance in Random Forest Model",
     subtitle = "Predictors ranked by relative contribution to CLV prediction",
     x = "Predictor Variables",
     y = "Relative Importance (%)"
   ) +
+  
   theme_minimal(base_size = 13) +
+  
   theme(
     plot.title = element_text(face = "bold"),
     plot.subtitle = element_text(color = "gray40"),
-    panel.grid.minor = element_blank()
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_blank()
   )
 ```
 
@@ -797,6 +874,10 @@ test_data$predicted_clv <- predict(rf_model, newdata = test_data)
 A scatter plot comparing predicted and actual CLV values was created to visually assess the performance of the Random Forest model.
 
 ```{r}
+#| echo: true
+#| code-fold: true
+#| code-summary: "Show the code"
+
 x_limit <- quantile(test_data$predicted_clv, 0.95, na.rm = TRUE)
 y_limit <- quantile(test_data$clv_millions, 0.95, na.rm = TRUE)
 
@@ -812,19 +893,25 @@ rf_plot <- ggplot(
     )
   )
 ) +
-  geom_point(alpha = 0.4, size = 2) +
   
+  geom_point(
+    alpha = 0.45,
+    size = 2
+  ) +
+  
+  # Perfect prediction reference line
   geom_abline(
     slope = 1,
     intercept = 0,
-    color = "#08306b",
+    color = "#004d40",   # Dark teal
     linewidth = 1,
     linetype = "dashed"
   ) +
   
+  # Teal gradient
   scale_color_gradient(
-    low = "#9ecae1",
-    high = "#08306b",
+    low = "#b2dfdb",     # Light teal
+    high = "#00695c",    # Dark teal
     labels = comma
   ) +
   
@@ -849,6 +936,7 @@ rf_plot <- ggplot(
     panel.grid.minor = element_blank()
   )
 
+# Interactive plot
 ggplotly(rf_plot, tooltip = "text")
 ```
 

@@ -2,4 +2,4 @@
 title: "Poster"
 ---
 
-![Project Poster](images/poster.png)
+![ ](images/poster.png)
